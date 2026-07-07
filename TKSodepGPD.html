@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tra Cứu Phí TK Số Đẹp Agribank</title>
+<style>
+  :root{
+    --maroon:#7E1230; --maroon-deep:#560A20; --maroon-soft:#F6E9ED;
+    --gold:#C08A1E; --gold-soft:#FBF3E1;
+    --ink:#241A1E; --ink-2:#6B5A60; --line:#E6DEE1;
+    --bg:#FAF8F7; --card:#FFFFFF;
+    --ok:#1E7B4F; --ok-soft:#E6F3EC;
+    --sold:#B3261E; --sold-soft:#FAE9E8;
+    --coc:#B26A00; --coc-soft:#FBF0DE;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:16px}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh}
+
+  header{background:linear-gradient(135deg,var(--maroon-deep),var(--maroon));color:#fff;padding:20px 24px 0}
+  .hd-top{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .logo{width:44px;height:44px;border-radius:10px;background:#fff;color:var(--maroon);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.5px;flex-shrink:0}
+  .hd-top h1{font-size:1.25rem;font-weight:700;letter-spacing:.2px}
+  .hd-top .sub{font-size:.8rem;opacity:.82;margin-top:2px}
+  .hd-badge{margin-left:auto;font-size:.72rem;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:4px 10px;border-radius:99px;white-space:nowrap}
+  nav{max-width:1060px;margin:16px auto 0;display:flex;gap:2px;overflow-x:auto}
+  nav button{appearance:none;border:0;background:transparent;color:rgba(255,255,255,.75);font:inherit;font-size:.9rem;font-weight:600;padding:10px 16px;border-radius:10px 10px 0 0;cursor:pointer;white-space:nowrap}
+  nav button:hover{color:#fff}
+  nav button.active{background:var(--bg);color:var(--maroon)}
+  nav button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+
+  main{max-width:1060px;margin:0 auto;padding:22px 24px 60px}
+  section.tab{display:none}
+  section.tab.active{display:block;animation:fade .18s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){section.tab.active{animation:none}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px}
+  .card h2{font-size:1.02rem;color:var(--maroon);margin-bottom:12px;letter-spacing:.2px}
+  .muted{color:var(--ink-2);font-size:.85rem}
+
+  /* ---- Tra cứu ---- */
+  .search-row{display:flex;gap:10px;flex-wrap:wrap}
+  .search-row input{flex:1;min-width:240px;font-family:var(--mono);font-size:1.35rem;letter-spacing:.18em;padding:12px 16px;border:2px solid var(--line);border-radius:10px;color:var(--ink)}
+  .search-row input:focus{outline:none;border-color:var(--maroon)}
+  .search-row button{background:var(--maroon);color:#fff;border:0;font:inherit;font-weight:700;font-size:.95rem;padding:12px 26px;border-radius:10px;cursor:pointer}
+  .search-row button:hover{background:var(--maroon-deep)}
+  .hint{margin-top:8px;font-size:.8rem;color:var(--ink-2)}
+  .err{margin-top:10px;color:var(--sold);font-size:.9rem;display:none}
+
+  .digits{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
+  .digits .cell{width:52px;height:64px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:1.9rem;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);position:relative}
+  .digits .cell.branch{background:var(--maroon-soft);border-color:transparent;color:var(--maroon);font-size:1.35rem;width:40px;height:56px;align-self:center}
+  .digits .cell.hit{background:var(--gold-soft);border-color:var(--gold);color:#7A5406;box-shadow:0 2px 0 var(--gold)}
+  .digits .gap{width:10px}
+  .digits-label{display:flex;justify-content:center;gap:24px;font-size:.72rem;color:var(--ink-2);margin-bottom:14px}
+
+  .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:720px){.result-grid{grid-template-columns:1fr}}
+  .kv{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+  .kv .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);margin-bottom:4px}
+  .kv .v{font-size:1.45rem;font-weight:800;color:var(--maroon);font-variant-numeric:tabular-nums}
+  .kv .v.small{font-size:1.05rem;color:var(--ink)}
+  .kv .note{font-size:.78rem;color:var(--ink-2);margin-top:4px}
+
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--maroon-soft);color:var(--maroon);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.mono{font-family:var(--mono);letter-spacing:.08em;white-space:nowrap}
+  tr:hover td{background:#FBF9F8}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:99px}
+  .tag.special{background:var(--gold-soft);color:#7A5406}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .toolbar input,.toolbar select{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff}
+  .toolbar input{font-family:var(--mono);letter-spacing:.1em;flex:1;min-width:200px}
+  .toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--maroon)}
+  .count-pill{align-self:center;font-size:.8rem;color:var(--ink-2)}
+
+  .tbl-wrap{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .note-list{font-size:.88rem;color:var(--ink);padding-left:20px}
+  .note-list li{margin-bottom:7px}
+  footer{max-width:1060px;margin:0 auto;padding:0 24px 40px;font-size:.75rem;color:var(--ink-2)}
+  @media(max-width:560px){
+    .digits .cell{width:34px;height:46px;font-size:1.25rem}
+    .digits .cell.branch{width:28px;height:40px;font-size:1rem}
+    html{font-size:15px}
+  }
+  @media print{header nav,.search-row button,.toolbar{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-top">
+    <div class="logo">AGB</div>
+    <div>
+      <h1>Tra Cứu Phí TK Số Đẹp Agribank</h1>
+      <div class="sub">Tác giả: Trần Minh Hải - 0938150987 - Agribank CN Bắc Giang II</div>
+      <div class="sub" style="opacity:.68;font-style:italic">Ghi chú: Sản phẩm nhờ AI tạo nên có thể có sai sót.</div>
+    </div>
+    <div class="hd-badge">Bản offline · Lưu hành nội bộ</div>
+  </div>
+  <nav role="tablist">
+    <button class="active" data-tab="tra-cuu">Tra cứu số</button>
+    <button data-tab="kho-so">Kho số đẹp</button>
+    <button data-tab="bieu-phi">Biểu phí</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ================= TAB 1: TRA CUU ================= -->
+<section class="tab active" id="tra-cuu">
+  <div class="card">
+    <h2>Nhập số tài khoản cần tra cứu</h2>
+    <div class="search-row">
+      <input id="acc-input" inputmode="numeric" maxlength="13" placeholder="Nhập đủ 13 số" autocomplete="off">
+      <button id="btn-search">Tra cứu</button>
+    </div>
+    <div class="hint">Cấu trúc 13 số: <b>4 số đầu</b> là mã chi nhánh (cố định), <b>9 số cuối</b> chọn từ kho số hoặc theo đề nghị của khách hàng. Có thể nhập 9 số cuối, chương trình tự ghép với mã chi nhánh ở ô bên dưới.</div>
+    <div class="err" id="acc-err"></div>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)">
+      <label for="dob-input" style="font-weight:700;font-size:.9rem;color:var(--maroon)">Tư vấn số hợp mệnh (tùy chọn)</label>
+      <div class="search-row" style="margin-top:8px">
+        <input type="date" id="dob-input" style="letter-spacing:normal;font-size:1rem;flex:0 1 200px;min-width:170px" min="1920-01-01" max="2025-12-31" title="Ngày sinh khách hàng (dương lịch)">
+        <input id="branch-input" inputmode="numeric" maxlength="4" value="" style="flex:0 1 130px;min-width:110px;font-size:1.05rem;text-align:center" title="Mã chi nhánh — 4 số đầu dãy tài khoản" placeholder="Mã CN">
+        <button id="btn-menh" type="button">Tư vấn số hợp mệnh</button>
+      </div>
+      <div class="hint">Nhập <b>ngày sinh</b> (dương lịch — nếu sinh trước Tết Nguyên đán, chọn lùi về năm trước) và <b>mã chi nhánh</b> (4 số đầu dãy tài khoản), sau đó bấm nút để chương trình gợi ý các dãy số đẹp hợp mệnh.</div>
+      <div class="err" id="menh-err"></div>
+      <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
+        <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
+        <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
+        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hà Đồ: 1-6 Thủy · 2-7 Hỏa · 3-8 Mộc · 4-9 Kim · 5-0 Thổ. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
+      </div>
+      <div id="sugg-wrap" style="display:none;margin-top:12px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <h2 style="font-size:.92rem;margin:0">Gợi ý dãy số đẹp hợp mệnh (mã chi nhánh <span id="sugg-branch" class="mono"></span>)</h2>
+          <button id="btn-sugg-export" type="button" style="margin-left:auto;background:var(--gold);color:#fff;border:0;font:inherit;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:8px;cursor:pointer">⬇ Xuất Excel (CSV)</button>
+        </div>
+        <div class="tbl-wrap" style="max-height:420px">
+          <table>
+            <thead><tr><th>Số tài khoản (13 số)</th><th>Loại số đẹp (giá trị cao nhất)</th><th class="num">Khung phí theo QĐ 479</th></tr></thead>
+            <tbody id="sugg-rows"></tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin-top:8px">Khung phí lấy theo hạng mục của <b>loại số có giá cao nhất</b> trong dãy. Bấm vào một dòng để đưa số sang ô tra cứu phía trên. Các số gợi ý chỉ dùng chữ số hợp mệnh — cần kiểm tra trên IPCAS xem số còn hay đã mở trước khi cung cấp cho khách.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Xuất danh sách số đẹp theo loại (CSV / mở bằng Excel)</h2>
+    <div class="search-row">
+      <select id="cat-type" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:1;min-width:220px"></select>
+      <select id="cat-param" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:0 1 190px;min-width:150px"></select>
+      <button id="btn-cat-export" type="button">⬇ Xuất CSV</button>
+    </div>
+    <div class="hint">Danh sách được ghép với <b>mã chi nhánh</b> ở ô phía trên thành số tài khoản 13 số đúng quy chuẩn, kèm khung phí theo QĐ 479. Danh sách đầy đủ rất lớn nên xuất <b>từng loại</b>; ước lượng số dòng hiển thị bên cạnh từng lựa chọn. Giới hạn mỗi lần xuất: 1.000.000 dòng.</div>
+    <div class="err" id="cat-err"></div>
+    <div class="muted" id="cat-status" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card" id="result-card" style="display:none">
+    <div class="digits" id="digit-strip"></div>
+    <div class="digits-label"><span>Mã chi nhánh</span><span>9 số lựa chọn (nhóm X)</span></div>
+
+    <div class="result-grid">
+      <div class="kv">
+        <div class="k">Khung phí theo QĐ 479/QĐ-NHNo-TCKT (chưa VAT)</div>
+        <div class="v" id="fee-range">—</div>
+        <div class="note" id="fee-range-note">Giám đốc chi nhánh loại I, II được thỏa thuận mức phí trong biên độ tối thiểu – tối đa</div>
+      </div>
+      <div class="kv">
+        <div class="k">Ý nghĩa dãy số</div>
+        <div class="v small" id="meaning">—</div>
+        <div class="note" id="meaning-note"></div>
+      </div>
+      <div class="kv" id="menh-kv" style="display:none;grid-column:1/-1">
+        <div class="k">Mức độ hợp mệnh khách hàng</div>
+        <div class="v small" id="menh-verdict">—</div>
+        <div class="note" id="menh-verdict-note"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <h2 style="font-size:.92rem">Các dạng số đẹp nhận diện được</h2>
+      <div class="tbl-wrap" style="max-height:300px">
+        <table>
+          <thead><tr><th>Loại số</th><th>Vị trí (trong 9 số cuối)</th><th class="num">Khung giá theo QĐ 479</th></tr></thead>
+          <tbody id="pattern-rows"></tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin-top:8px">Trường hợp số giao nhau giữa nhiều loại số đẹp: thu phí theo <b>mức cao hơn</b> (mục 7, Phụ lục 02 – QĐ 479).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB 2: KHO SO ================= -->
+<section class="tab" id="kho-so">
+  <div class="card">
+    <h2>Danh sách kho số — kèm theo Văn bản 3879/NHNo-NCPT ngày 28/4/2021</h2>
+    <p class="muted" style="margin-bottom:12px">Tài khoản gồm 13 số, cấu trúc AX. Nhóm A: 4 số đầu là mã chi nhánh (cố định). Nhóm X: 9 số cuối là các số tự nhiên 0–9. Với mỗi loại, chi nhánh được chọn tài khoản từ 2 đến 9 số đẹp; chi nhánh có mã phù hợp có thể kết hợp tối đa 13 số đẹp.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:44px">STT</th><th style="width:220px">Loại tài khoản số "đẹp"</th><th>Số tài khoản (định dạng các số thuộc nhóm X)</th></tr></thead>
+        <tbody id="khoso-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Nguyên tắc cung cấp (VB 3879)</h2>
+    <ul class="note-list">
+      <li>Hai hình thức cung cấp: <b>Hình thức 1</b> — số đẹp có cấu trúc định sẵn trong Kho số; <b>Hình thức 2</b> — số theo đề nghị của khách hàng, không thuộc Kho số.</li>
+      <li>Khách hàng <b>không được bán, chuyển nhượng, cho, tặng</b> tài khoản số đẹp cho khách hàng khác.</li>
+      <li>Số đẹp được cung cấp <b>ngay khi mở tài khoản</b>, không cung cấp sau khi đã phát sinh giao dịch.</li>
+      <li>GDV tư vấn đầy đủ điều kiện sử dụng, kiểm tra trên IPCAS đảm bảo số hiệu chưa mở cho khách hàng khác; mở theo mã sản phẩm <b>236</b> (cá nhân) / <b>238</b> (tổ chức), cấp phát số đẹp theo Thông báo 495/TB-CNTT-HTCN ngày 22/04/2021.</li>
+      <li>Nghiêm cấm lôi kéo, ép khách hàng mở tài khoản số đẹp; nghiêm cấm cán bộ câu kết với khách hàng để thu phí trái quy định.</li>
+      <li>Với khách hàng lớn, tiềm năng: chi nhánh có thể xem xét miễn, giảm phí theo quy định hiện hành của Tổng giám đốc.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= TAB 3: BIEU PHI ================= -->
+<section class="tab" id="bieu-phi">
+  <div class="card">
+    <h2>Phụ lục 01 — Biểu phí dịch vụ cung cấp tài khoản số đẹp (QĐ 479/QĐ-NHNo-TCKT ngày 05/4/2021, hiệu lực 15/04/2021)</h2>
+    <p class="muted" style="margin-bottom:12px">Mức phí chưa bao gồm thuế GTGT. "Loại đặc biệt" gồm: cặp số thuộc loại tài khoản <b>số lặp cuối, lộc phát, số tiến liền nhau</b>.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Danh mục phí dịch vụ (DP/A1 — mở TKTT chọn số đẹp)</th><th class="num">Tối thiểu</th><th class="num">Tối đa</th></tr></thead>
+        <tbody id="fee-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Phí mở tài khoản số đẹp theo yêu cầu (nếu còn)</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Danh mục</th><th class="num">Tối thiểu</th><th class="num">Tối đa</th></tr></thead>
+        <tbody>
+          <tr><td>Tài khoản chọn từ 2 đến 5 số</td><td class="num">300.000</td><td class="num">500.000</td></tr>
+          <tr><td>Tài khoản chọn 6 số</td><td class="num">500.000</td><td class="num">1.000.000</td></tr>
+          <tr><td>Tài khoản chọn từ 7 đến 9 số</td><td class="num">1.000.000</td><td class="num">3.000.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:10px">Quản lý tài khoản số đẹp: theo quy định về phí quản lý tài khoản thanh toán thông thường của Tổng giám đốc từng thời kỳ.</p>
+  </div>
+  <div class="card">
+    <h2>Hướng dẫn thực hiện (Phụ lục 02 — tóm tắt)</h2>
+    <ul class="note-list">
+      <li>Áp dụng cho tài khoản thanh toán bằng VND và ngoại tệ; phí tính bằng VND (ngoại tệ quy đổi theo tỷ giá cơ bản tại thời điểm thu phí).</li>
+      <li>Agribank <b>không hoàn trả phí</b> đã thu khi khách hàng hủy giao dịch hoặc giao dịch không thực hiện được do sai sót không phải lỗi của Agribank.</li>
+      <li>Thời điểm tính và thu phí: tại thời điểm mở tài khoản số đẹp cho khách hàng.</li>
+      <li>Giám đốc chi nhánh loại I, II được thỏa thuận mức phí trong biên độ tối thiểu – tối đa; chi nhánh xây dựng biểu phí tại chi nhánh theo quy định.</li>
+      <li>Số thuộc loại <b>giao nhau giữa các loại số đẹp</b>: thu phí theo mức cao hơn.</li>
+      <li>Biểu phí có thể được thay đổi, chỉnh sửa từng thời kỳ; miễn, giảm phí theo quy định hiện hành của Tổng giám đốc.</li>
+    </ul>
+  </div>
+</section>
+
+
+
+</main>
+
+<footer>
+  Chương trình hỗ trợ nội bộ, tổng hợp từ: VB 3879/NHNo-NCPT (28/4/2021) — triển khai dịch vụ tài khoản số đẹp; QĐ 479/QĐ-NHNo-TCKT (05/4/2021) — biểu phí tạm thời; file kho số chi nhánh 37XX. Mức thu thực tế do Giám đốc chi nhánh quyết định trong khung phí quy định.
+</footer>
+
+<script>
+/* ============================================================
+   BẢNG GIÁ KHO SỐ (đơn vị VNĐ, chưa VAT) — có thể chỉnh tại đây
+   Tham chiếu sheet "THAM SO" của file Excel chi nhánh.
+   ============================================================ */
+const P = {
+  lapCuoi:      {3:500000,4:1000000,5:3000000,6:8000000,7:10000000,8:40000000,9:80000000},      // Số lặp cuối aaa, aaaa...
+  lapGiua:      {3:300000,4:500000,5:1000000,6:3000000,7:8000000,8:10000000,9:40000000},        // Số lặp giữa
+  tienCuoi:     {3:1000000,4:3000000,5:8000000,6:10000000,7:40000000,8:80000000,9:100000000},   // Số tiến liền nhau cuối
+  tienGiua:     {3:500000,4:1000000,5:3000000,6:8000000,7:10000000,8:40000000,9:80000000},      // Số tiến liền nhau giữa
+  capDoiCuoi:   {2:300000,3:500000,4:1000000,5:3000000,6:8000000,7:10000000,8:40000000,9:100000000}, // Lộc phát/Thần tài/Cửu phát/Cửu lộc cuối
+  capDoiGiua:   {3:300000,4:500000,5:1000000,6:3000000,7:8000000,8:10000000,9:40000000},        // ... trong dãy
+  tienBuoc2:    {3:300000,4:500000,5:1000000,6:3000000,7:8000000},                              // Số tiến chẵn / lẻ
+  kepDoi:       {2:500000,3:3000000,4:10000000},   // Kép từng đôi một (số cặp)
+  capTien2so:   {2:500000,3:3000000,4:10000000},   // Cặp 2 số tiến (bước 1/2/5/10) — theo số cặp
+  tamHoaKep:3000000, baCapTamHoa:40000000,
+  tuQuyKep:10000000, nguQuyKep:100000000, ganh44:40000000,
+  abab:500000, ababab:3000000, abababab:10000000,
+  lap3so2lan:3000000, lap3so3lan:40000000,
+  dao2:500000, dao3:3000000,
+  duoi1368:500000, duoi68368:1000000, duoi151618:3000000, duoiKhac:500000,
+};
+const VAT = 1.1;
+const DEFAULT_BRANCH = '2501';
+
+/* ============================================================
+   NHẬN DIỆN LOẠI SỐ ĐẸP trên 9 số cuối (chỉ số 0..8)
+   Trả về [{name, pos:[...], price, special}]
+   ============================================================ */
+function detectPatterns(s){
+  const out=[], n=s.length, d=[...s].map(Number);
+  const add=(name,pos,price,special)=>{ if(price) out.push({name,pos,price,special:!!special}); };
+  const range=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r;};
+
+  // 1. Số lặp (run cùng chữ số >= 3)
+  for(let i=0;i<n;){
+    let j=i; while(j+1<n && s[j+1]===s[i]) j++;
+    const len=j-i+1;
+    if(len>=3){
+      const end=(j===n-1);
+      add(`Số lặp ${end?'cuối':'giữa'} ${len} số (${s.slice(i,j+1)})`, range(i,j),
+          (end?P.lapCuoi:P.lapGiua)[Math.min(len,9)], end);
+    }
+    i=j+1;
+  }
+
+  // 2. Số tiến liền nhau (tăng dần 1 đơn vị, >= 3 số)
+  for(let i=0;i<n;){
+    let j=i; while(j+1<n && d[j+1]===d[j]+1) j++;
+    const len=j-i+1;
+    if(len>=3){
+      const end=(j===n-1);
+      add(`Số tiến liền nhau ${end?'cuối':'giữa'} ${len} số (${s.slice(i,j+1)})`, range(i,j),
+          (end?P.tienCuoi:P.tienGiua)[Math.min(len,9)], end);
+    }
+    i=j+1;
+  }
+
+  // 2b. Số tiến chẵn / lẻ (bước 2, >= 3 số)
+  for(let i=0;i<n;){
+    let j=i; while(j+1<n && d[j+1]===d[j]+2) j++;
+    const len=j-i+1;
+    if(len>=3){
+      const kind = d[i]%2===0?'chẵn':'lẻ';
+      add(`Số tiến ${kind} ${len} số (${s.slice(i,j+1)})`, range(i,j), P.tienBuoc2[Math.min(len,7)]);
+    }
+    i=j+1;
+  }
+
+  // 3. Cặp số may mắn: Lộc phát 6-8, Thần tài 7-9, Trường cửu phát 8-9, Trường cửu lộc 6-9
+  const lucky=[[['6','8'],'Lộc phát (6 & 8)',true],[['7','9'],'Thần tài (7 & 9)',false],
+               [['8','9'],'Trường cửu phát (8 & 9)',false],[['6','9'],'Trường cửu lộc (6 & 9)',false]];
+  for(const [set,label,isLocPhat] of lucky){
+    for(let i=0;i<n;){
+      if(!set.includes(s[i])){i++;continue;}
+      let j=i; while(j+1<n && set.includes(s[j+1])) j++;
+      const len=j-i+1;
+      const hasBoth = s.slice(i,j+1).includes(set[0]) && s.slice(i,j+1).includes(set[1]);
+      if(hasBoth){
+        const end=(j===n-1);
+        if(end && len>=2) add(`${label} cuối ${len} số (${s.slice(i,j+1)})`, range(i,j), P.capDoiCuoi[Math.min(len,9)], isLocPhat);
+        else if(!end && len>=3) add(`${label} trong dãy ${len} số (${s.slice(i,j+1)})`, range(i,j), P.capDoiGiua[Math.min(len,9)], false);
+      }
+      i=j+1;
+    }
+  }
+
+  // 4. Tam hoa kép aaabbb (a≠b) — cuối và giữa; 3 cặp tam hoa aaabbbccc
+  for(let i=0;i+5<n;i++){
+    const a=s[i],b=s[i+3];
+    if(a!==b && s[i+1]===a&&s[i+2]===a && s[i+4]===b&&s[i+5]===b){
+      const end=(i+5===n-1);
+      add(`Tam hoa kép ${end?'cuối':'giữa'} (${s.slice(i,i+6)})`, range(i,i+5), P.tamHoaKep);
+    }
+  }
+  if(n===9){
+    const a=s[0],b=s[3],c=s[6];
+    if(s[1]===a&&s[2]===a&&s[4]===b&&s[5]===b&&s[7]===c&&s[8]===c&&new Set([a,b,c]).size>1)
+      add(`3 cặp tam hoa (${a}${a}${a}${b}${b}${b}${c}${c}${c})`, range(0,8), P.baCapTamHoa);
+  }
+
+  // 5. Tài khoản gánh aaaa x aaaa (4 đầu = 4 cuối cùng chữ số, dạng 0000x0000)
+  if(n===9){
+    const q1=s.slice(0,4), q2=s.slice(5,9);
+    if(/^(\d)\1{3}$/.test(q1) && q1===q2) add(`Tài khoản gánh (${q1} ${s[4]} ${q2})`, [0,1,2,3,5,6,7,8], P.ganh44, false);
+  }
+
+  // 6. Tứ quý kép aaaabbbb (a≠b) — cuối hoặc trong dãy; Ngũ quý kép — không thể trong 9 số trừ 4+5
+  for(let i=0;i+7<n;i++){
+    const a=s[i],b=s[i+4];
+    if(a!==b && s.slice(i,i+4)===a.repeat(4) && s.slice(i+4,i+8)===b.repeat(4))
+      add(`Tứ quý kép (${a.repeat(4)}${b.repeat(4)})`, range(i,i+7), P.tuQuyKep);
+  }
+
+  // 7. Đối xứng abab / ababab / abababab — ưu tiên cuối, đồng thời quét giữa
+  const scanRep=(unit,times,label,price)=>{
+    const L=unit*times;
+    for(let i=0;i+L<=n;i++){
+      const seg=s.slice(i,i+L), u=seg.slice(0,unit);
+      if(new Set(u).size<2) continue;                       // tránh trùng với số lặp
+      let ok=true;
+      for(let k=1;k<times;k++) if(seg.slice(k*unit,(k+1)*unit)!==u){ok=false;break;}
+      if(ok){
+        const end=(i+L===n);
+        add(`${label} ${end?'cuối':'giữa'} (${seg})`, range(i,i+L-1), price);
+      }
+    }
+  };
+  scanRep(2,4,'4 cặp abababab',P.abababab);
+  scanRep(2,3,'3 cặp ababab',P.ababab);
+  scanRep(2,2,'2 cặp abab',P.abab);
+  scanRep(3,3,'Lặp 3 số 3 lần',P.lap3so3lan);
+  scanRep(3,2,'Lặp 3 số 2 lần',P.lap3so2lan);
+
+  // 8. Số đảo: abba cuối; abccba cuối
+  if(n>=4){
+    const t=s.slice(-4);
+    if(t[0]===t[3]&&t[1]===t[2]&&t[0]!==t[1]) add(`Cặp 2 số đảo cuối (${t})`, range(n-4,n-1), P.dao2);
+  }
+  if(n>=6){
+    const t=s.slice(-6);
+    if(t[0]===t[5]&&t[1]===t[4]&&t[2]===t[3]&&new Set(t).size>=2&&!(t[0]===t[1]&&t[1]===t[2]))
+      add(`Cặp 3 số đảo cuối (${t})`, range(n-6,n-1), P.dao3);
+  }
+
+  // 9. Kép từng đôi một aabbcc… (>= 2 cặp, các cặp liền kề khác nhau) — kết thúc ở cuối hoặc giữa
+  for(let i=0;i<n-3;i++){
+    if((n-i)%2!==0 && i+4>n) continue;
+    let pairs=0, j=i;
+    while(j+1<n && s[j]===s[j+1] && (pairs===0 || s[j]!==s[j-2])){ pairs++; j+=2; }
+    if(pairs>=2){
+      // kiểm tra không phải toàn 1 chữ số (đã tính ở số lặp)
+      const seg=s.slice(i,i+pairs*2);
+      if(new Set(seg).size>=2){
+        const end=(i+pairs*2===n);
+        add(`Kép từng đôi một ${end?'cuối':'giữa'} ${pairs} cặp (${seg})`, range(i,i+pairs*2-1), P.kepDoi[Math.min(pairs,4)]);
+      }
+      i=j-1;
+    }
+  }
+
+  // 10. Cặp 2 số tiến bước 1 / 2 / 5 / 10 (nhóm 2 chữ số: 1213, 1315, 0510, 1020…) — cuối hoặc giữa
+  for(const step of [1,2,5,10]){
+    let found=false;
+    for(let k=4;k>=2 && !found;k--){      // ưu tiên chuỗi dài nhất; k cặp = 2k chữ số
+      const L=k*2; if(L>n) continue;
+      for(let i=n-L;i>=0 && !found;i--){  // ưu tiên vị trí cuối trước
+        const seg=s.slice(i,i+L), nums=[];
+        for(let x=0;x<L;x+=2) nums.push(Number(seg.slice(x,x+2)));
+        let ok=true;
+        for(let x=1;x<nums.length;x++) if(nums[x]-nums[x-1]!==step){ok=false;break;}
+        if(ok && step===5)  ok=nums.every(x=>x%5===0);   // "tiến 5 đơn vị là bội số của số 5"
+        if(ok && step===10) ok=nums.every(x=>x%10===0);  // "tiến 10 đơn vị tròn chục"
+        if(ok && new Set(seg).size>=2){
+          const end=(i+L===n);
+          add(`Cặp ${k} số tiến ${step} đơn vị ${end?'cuối':'giữa'} (${seg})`, range(i,i+L-1), P.capTien2so[k]);
+          found=true;
+        }
+      }
+    }
+  }
+
+  // 11. Đuôi đặc biệt
+  const tails=[['1368','Sinh tài lộc phát',P.duoi1368],['68368','Phát tài phát lộc',P.duoi68368],
+               ['151618','Mỗi năm mỗi lộc mỗi phát',P.duoi151618],
+               ['4078','Đuôi đẹp 4078 (bốn mùa không thất bát)',P.duoiKhac],
+               ['1102','Đuôi đẹp 1102 (độc nhất vô nhị)',P.duoiKhac],
+               ['2204','Đuôi đẹp 2204',P.duoiKhac]];
+  for(const [t,label,price] of tails)
+    if(s.endsWith(t)) add(`${label} — đuôi ${t}`, range(n-t.length,n-1), price);
+
+  // sắp xếp giảm dần theo giá
+  out.sort((a,b)=>b.price-a.price);
+  return out;
+}
+
+/* Khung phí chính thức theo QĐ 479 dựa trên số lượng số đẹp + loại đặc biệt */
+function officialFee(count, special){
+  const F=(a,b)=>({min:a,max:b});
+  if(count>=10) return {min:100000000,max:null};
+  const table={
+    2:[F(300000,500000),F(300000,500000)],
+    3:[F(300000,500000),F(500000,1000000)],
+    4:[F(500000,1000000),F(1000000,3000000)],
+    5:[F(1000000,3000000),F(3000000,5000000)],
+    6:[F(3000000,5000000),F(8000000,10000000)],
+    7:[F(8000000,10000000),F(10000000,20000000)],
+    8:[F(10000000,20000000),F(25000000,40000000)],
+    9:[F(25000000,40000000),F(40000000,80000000)],
+  };
+  const row=table[Math.max(2,Math.min(count,9))];
+  return special?row[1]:row[0];
+}
+
+/* ============================================================ */
+const fmt=v=>v==null?'Thỏa thuận':v.toLocaleString('vi-VN');
+const $=id=>document.getElementById(id);
+
+/* Tabs */
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.tab).classList.add('active');
+  });
+});
+
+function lookup(){
+  const errEl=$('acc-err'); errEl.style.display='none';
+  let v=$('acc-input').value.replace(/\D/g,'');
+  if(v.length===9) v=getBranch()+v;
+  if(v.length!==13){ errEl.textContent='Vui lòng nhập đủ 13 số (hoặc 9 số cuối).'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
+  $('acc-input').value=v;
+  const branch=v.slice(0,4), suffix=v.slice(4);
+  const pats=detectPatterns(suffix);
+  const feeKey=p=>{const f=officialFee(p.pos.length,p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
+  pats.sort((a,b)=>feeKey(b)-feeKey(a)||b.price-a.price);
+
+  /* Vẽ dải số */
+  const strip=$('digit-strip'); strip.innerHTML='';
+  const hitSet=new Set(); pats.forEach(p=>p.pos.forEach(i=>hitSet.add(i)));
+  [...branch].forEach(c=>{const el=document.createElement('div');el.className='cell branch';el.textContent=c;strip.appendChild(el);});
+  const gap=document.createElement('div');gap.className='gap';strip.appendChild(gap);
+  [...suffix].forEach((c,i)=>{const el=document.createElement('div');el.className='cell'+(hitSet.has(i)?' hit':'');el.textContent=c;strip.appendChild(el);});
+
+  /* Khung phí + ý nghĩa — lấy theo LOẠI SỐ CÓ KHUNG PHÍ CAO NHẤT
+     (mục 7, Phụ lục 02 – QĐ 479: số giao nhau giữa các loại thu theo mức cao hơn,
+      không cộng dồn vị trí của các loại trùng nhau) */
+  const best=pats[0]||null;
+  if(best){
+    const f=officialFee(best.pos.length,best.special);
+    $('fee-range').textContent=fmt(f.min)+' — '+fmt(f.max)+' đ';
+    $('fee-range-note').textContent='Theo loại cao nhất: '+best.name+' ('+best.pos.length+' số đẹp'+(best.special?' · nhóm đặc biệt':'')+') — biên độ do Giám đốc chi nhánh thỏa thuận.';
+  } else {
+    $('fee-range').textContent='Phí theo yêu cầu: 300.000 — 3.000.000 đ';
+    $('fee-range-note').textContent='Số không thuộc cấu trúc kho số — áp dụng mục 2 biểu phí (mở theo yêu cầu, nếu còn).';
+  }
+
+  $('meaning').textContent=best?best.name:'Số thường — không thuộc kho số đẹp định sẵn';
+  $('meaning-note').textContent=pats.length>1
+    ? 'Đồng thời: '+pats.slice(1,4).map(p=>p.name).join(' · ')+(pats.length>4?' …':'')
+    : '';
+
+  /* Bảng các dạng */
+  const tb=$('pattern-rows'); tb.innerHTML='';
+  if(!pats.length){
+    tb.innerHTML='<tr><td colspan="3" class="muted">Không nhận diện được dạng số đẹp nào trong 9 số cuối.</td></tr>';
+  } else pats.forEach(p=>{
+    const tr=document.createElement('tr');
+    const f=officialFee(p.pos.length,p.special);
+    tr.innerHTML='<td>'+p.name+(p.special?' <span class="tag special">đặc biệt</span>':'')+'</td>'+
+      '<td class="mono">'+p.pos.map(i=>i+5).join(', ')+'</td>'+
+      '<td class="num">'+fmt(f.min)+' — '+fmt(f.max)+' đ</td>';
+    tb.appendChild(tr);
+  });
+
+  $('result-card').style.display='block';
+  applyMenhToResult();
+}
+
+$('btn-search').addEventListener('click',lookup);
+$('acc-input').addEventListener('keydown',e=>{if(e.key==='Enter')lookup();});
+
+/* ============ TƯ VẤN SỐ HỢP MỆNH (tham khảo) ============ */
+const CAN=['Giáp','Ất','Bính','Đinh','Mậu','Kỷ','Canh','Tân','Nhâm','Quý'];
+const CHI=['Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi','Thân','Dậu','Tuất','Hợi'];
+/* Nạp âm 30 cặp (bắt đầu Giáp Tý): [tên, hành] */
+const NAP_AM=[
+ ['Hải Trung Kim','Kim'],['Lư Trung Hỏa','Hỏa'],['Đại Lâm Mộc','Mộc'],['Lộ Bàng Thổ','Thổ'],['Kiếm Phong Kim','Kim'],
+ ['Sơn Đầu Hỏa','Hỏa'],['Giản Hạ Thủy','Thủy'],['Thành Đầu Thổ','Thổ'],['Bạch Lạp Kim','Kim'],['Dương Liễu Mộc','Mộc'],
+ ['Tuyền Trung Thủy','Thủy'],['Ốc Thượng Thổ','Thổ'],['Tích Lịch Hỏa','Hỏa'],['Tùng Bách Mộc','Mộc'],['Trường Lưu Thủy','Thủy'],
+ ['Sa Trung Kim','Kim'],['Sơn Hạ Hỏa','Hỏa'],['Bình Địa Mộc','Mộc'],['Bích Thượng Thổ','Thổ'],['Kim Bạch Kim','Kim'],
+ ['Phú Đăng Hỏa','Hỏa'],['Thiên Hà Thủy','Thủy'],['Đại Trạch Thổ','Thổ'],['Thoa Xuyến Kim','Kim'],['Tang Đố Mộc','Mộc'],
+ ['Đại Khê Thủy','Thủy'],['Sa Trung Thổ','Thổ'],['Thiên Thượng Hỏa','Hỏa'],['Thạch Lựu Mộc','Mộc'],['Đại Hải Thủy','Thủy']];
+const HA_DO={'Thủy':[1,6],'Hỏa':[2,7],'Mộc':[3,8],'Kim':[4,9],'Thổ':[5,0]};
+const SINH={'Kim':'Thủy','Thủy':'Mộc','Mộc':'Hỏa','Hỏa':'Thổ','Thổ':'Kim'};   // A sinh B
+const KHAC={'Kim':'Mộc','Mộc':'Thổ','Thổ':'Thủy','Thủy':'Hỏa','Hỏa':'Kim'};   // A khắc B
+const inv=(map,target)=>Object.keys(map).find(k=>map[k]===target);
+
+let MENH=null; // {year, canChi, napAm, hanh, hop:[..], ky:[..]}
+function calcMenh(){
+  const v=$('dob-input').value;
+  const box=$('menh-box');
+  if(!v){ MENH=null; box.style.display='none'; applyMenhToResult(); return; }
+  const year=Number(v.slice(0,4));
+  const idx=((year-4)%60+60)%60;
+  const canChi=CAN[idx%10]+' '+CHI[idx%12];
+  const [napAm,hanh]=NAP_AM[Math.floor(idx/2)];
+  const sinhMenh=inv(SINH,hanh);        // hành sinh cho mệnh
+  const khacMenh=inv(KHAC,hanh);        // hành khắc mệnh
+  const hop=[...HA_DO[sinhMenh],...HA_DO[hanh]];
+  const ky=[...HA_DO[khacMenh]];
+  MENH={year,canChi,napAm,hanh,hop,ky,sinhMenh,khacMenh};
+  $('menh-title').textContent='Năm '+year+' — '+canChi+' · Mệnh '+hanh+' ('+napAm+')';
+  $('menh-detail').innerHTML=
+    'Số <b>hợp mệnh</b>: <b>'+hop.join(', ')+'</b> (hành '+sinhMenh+' tương sinh và hành '+hanh+' bản mệnh) &nbsp;·&nbsp; '+
+    'Số <b>nên tránh</b>: <b>'+ky.join(', ')+'</b> (hành '+khacMenh+' khắc '+hanh+').'+
+    '<br>Gợi ý ưu tiên các dãy có nhiều chữ số '+hop.join(', ')+' — ví dụ đuôi lặp hoặc lộc phát/thần tài tạo từ các số này.';
+  box.style.display='block';
+  applyMenhToResult();
+}
+function applyMenhToResult(){
+  const kv=$('menh-kv');
+  if($('result-card').style.display!=='block'){ kv.style.display='none'; return; }
+  const v=$('acc-input').value.replace(/\D/g,'');
+  if(!MENH||v.length!==13){ kv.style.display='none'; return; }
+  const suffix=v.slice(4);
+  let nHop=0,nKy=0;
+  [...suffix].forEach(c=>{const d=Number(c); if(MENH.hop.includes(d))nHop++; else if(MENH.ky.includes(d))nKy++;});
+  let verdict;
+  if(nHop>=6&&nKy===0) verdict='Rất hợp mệnh '+MENH.hanh;
+  else if(nHop>=5&&nKy<=1) verdict='Hợp mệnh '+MENH.hanh;
+  else if(nHop>nKy) verdict='Khá hợp mệnh '+MENH.hanh;
+  else if(nKy>nHop) verdict='Chưa hợp — nhiều số thuộc hành '+MENH.khacMenh+' khắc mệnh';
+  else verdict='Trung tính với mệnh '+MENH.hanh;
+  $('menh-verdict').textContent=verdict;
+  $('menh-verdict-note').textContent='Trong 9 số cuối: '+nHop+' số hợp ('+MENH.hop.join(', ')+') · '+nKy+' số kỵ ('+MENH.ky.join(', ')+') — khách sinh năm '+MENH.year+', '+MENH.canChi+', mệnh '+MENH.hanh+' ('+MENH.napAm+'). Chỉ mang tính tham khảo khi tư vấn.';
+  kv.style.display='block';
+}
+$('dob-input').addEventListener('change',calcMenh);
+
+/* ============ TIỆN ÍCH CHUNG ============ */
+function getBranch(){
+  const b=$('branch-input').value.replace(/\D/g,'');
+  return b.length===4?b:DEFAULT_BRANCH;
+}
+function downloadCSV(name, header, rows){
+  // rows: mảng mảng; Số TK bọc ="..." để Excel không đổi thành số mũ
+  const lines=[header.join(',')];
+  for(const r of rows) lines.push(r.join(','));
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+const csvAcc=v=>'="'+v+'"';
+function topFeeOf(suffix){
+  const pats=detectPatterns(suffix);
+  if(!pats.length) return null;
+  const key=p=>{const f=officialFee(p.pos.length,p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
+  pats.sort((a,b)=>key(b)-key(a)||b.price-a.price);
+  const best=pats[0], f=officialFee(best.pos.length,best.special);
+  return {name:best.name,special:best.special,min:f.min,max:f.max};
+}
+
+/* ============ NÚT "TƯ VẤN SỐ HỢP MỆNH" — SINH DANH SÁCH GỢI Ý ============ */
+let SUGG=[]; // [{full,name,min,max,st}]
+function genSuggestions(){
+  const H=[...new Set(MENH.hop)].map(String);
+  const cands=new Set();
+  const rep=(c,n)=>c.repeat(n);
+  for(const a of H){ cands.add(rep(a,9)); }
+  for(const a of H) for(const b of H){ if(a===b) continue;
+    cands.add(rep(a,4)+b+rep(a,4));          // gánh aaaa b aaaa
+    cands.add((a+b).repeat(4)+a);            // ababababa
+    cands.add(rep(a,6)+rep(b,3));            // aaaaaabbb
+    cands.add(rep(a,3)+rep(b,6));
+    cands.add(rep(a,5)+rep(b,4));
+    cands.add(rep(a,4)+rep(b,5));
+    cands.add(a+rep(b,8));                   // lặp cuối 8
+    cands.add(rep(a,2)+rep(b,7));            // lặp cuối 7
+    cands.add(rep(a,3)+rep(b,3)+rep(a,3));
+    cands.add(a+b+a+b+rep(b,5));
+  }
+  for(const a of H) for(const b of H) for(const c of H){
+    if(a===b||b===c||a===c) continue;
+    cands.add(rep(a,3)+rep(b,3)+rep(c,3));   // 3 cặp tam hoa
+    cands.add((a+b+c).repeat(3));            // lặp 3 số 3 lần
+  }
+  const branch=getBranch();
+  SUGG=[];
+  for(const s of cands){
+    const info=topFeeOf(s); if(!info) continue;
+    const full=branch+s;
+    SUGG.push({full,name:info.name,min:info.min,max:info.max});
+  }
+  SUGG.sort((a,b)=>((b.max==null?1e12:b.max)-(a.max==null?1e12:a.max))||(b.min-a.min)||(a.full<b.full?-1:1));
+  $('sugg-branch').textContent=branch;
+  $('sugg-rows').innerHTML=SUGG.map((r,i)=>{
+    return '<tr data-acc="'+r.full+'" style="cursor:pointer" title="Bấm để tra cứu số này">'+
+      '<td class="mono">'+r.full+'</td><td>'+r.name+'</td>'+
+      '<td class="num">'+fmt(r.min)+' — '+fmt(r.max)+' đ</td></tr>';
+  }).join('');
+  document.querySelectorAll('#sugg-rows tr').forEach(tr=>tr.addEventListener('click',()=>{
+    $('acc-input').value=tr.dataset.acc; lookup();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+  $('sugg-wrap').style.display='block';
+}
+$('btn-menh').addEventListener('click',()=>{
+  const err=$('menh-err'); err.style.display='none';
+  if(!$('dob-input').value){ err.textContent='Vui lòng chọn ngày tháng năm sinh của khách hàng.'; err.style.display='block'; return; }
+  if($('branch-input').value.replace(/\D/g,'').length!==4){ err.textContent='Mã chi nhánh phải gồm đúng 4 chữ số.'; err.style.display='block'; return; }
+  calcMenh();
+  genSuggestions();
+});
+$('btn-sugg-export').addEventListener('click',()=>{
+  if(!SUGG.length) return;
+  const rows=SUGG.map((r,i)=>[i+1,csvAcc(r.full),'"'+r.name.replace(/"/g,'""')+'"',r.min,r.max==null?'Thỏa thuận':r.max]);
+  const y=MENH?MENH.year:'';
+  downloadCSV('So_dep_hop_menh_'+(MENH?MENH.hanh:'')+'_'+y+'_'+getBranch()+'.csv',
+    ['STT','So tai khoan','Loai so dep (cao nhat)','Phi toi thieu (VND)','Phi toi da (VND)'],rows);
+});
+
+/* ============ XUẤT DANH SÁCH SỐ ĐẸP THEO LOẠI (CSV) ============ */
+const MAX_ROWS=1000000;
+const D10=['0','1','2','3','4','5','6','7','8','9'];
+function* pref(n,excludeLast){ // sinh mọi tiền tố n chữ số, chữ số cuối không thuộc excludeLast
+  if(n===0){ yield ''; return; }
+  const t=10**n;
+  for(let i=0;i<t;i++){
+    const s=String(i).padStart(n,'0');
+    if(excludeLast && excludeLast.includes(s[n-1])) continue;
+    yield s;
+  }
+}
+function* pairTails(a,b,L){ // chuỗi dài L từ {a,b} chứa cả 2 ký tự
+  const t=2**L;
+  for(let m=0;m<t;m++){
+    let s='',has0=false,has1=false;
+    for(let k=L-1;k>=0;k--){ const bit=(m>>k)&1; s+=bit?b:a; bit?has1=true:has0=true; }
+    if(has0&&has1) yield s;
+  }
+}
+const CATALOG=[
+ {label:'Số lặp cuối (aaa…)',special:true,params:[4,5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số lặp',count:10*9*(10**Math.max(9-L-1,0))*(9-L>0?1:0)||10*(L===9?1:0)})),
+  gen:function*(p){const L=+p.slice(1);for(const d of D10)for(const q of pref(9-L,[d]))yield {s:q+d.repeat(L),len:L};}},
+ {label:'Lộc phát cuối (6 & 8)',special:true,params:[5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(2**L-2)*( L===9?1:9*(10**Math.max(9-L-1,0)) )})),
+  gen:function*(p){const L=+p.slice(1);for(const t of pairTails('6','8',L))for(const q of pref(9-L,['6','8']))yield {s:q+t,len:L};}},
+ {label:'Thần tài cuối (7 & 9)',special:false,params:[5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(2**L-2)*(L===9?1:9*(10**Math.max(9-L-1,0)))})),
+  gen:function*(p){const L=+p.slice(1);for(const t of pairTails('7','9',L))for(const q of pref(9-L,['7','9']))yield {s:q+t,len:L};}},
+ {label:'Trường cửu phát cuối (8 & 9)',special:false,params:[5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(2**L-2)*(L===9?1:9*(10**Math.max(9-L-1,0)))})),
+  gen:function*(p){const L=+p.slice(1);for(const t of pairTails('8','9',L))for(const q of pref(9-L,['8','9']))yield {s:q+t,len:L};}},
+ {label:'Trường cửu lộc cuối (6 & 9)',special:false,params:[5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(2**L-2)*(L===9?1:9*(10**Math.max(9-L-1,0)))})),
+  gen:function*(p){const L=+p.slice(1);for(const t of pairTails('6','9',L))for(const q of pref(9-L,['6','9']))yield {s:q+t,len:L};}},
+ {label:'Số tiến liền nhau cuối (123…)',special:true,params:[4,5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(11-L)*(L===9?1:9*(10**Math.max(9-L-1,0)))})),
+  gen:function*(p){const L=+p.slice(1);
+    for(let st=0;st+L<=10;st++){let t='';for(let k=0;k<L;k++)t+=String(st+k);
+      const ex=st>0?[String(st-1)]:null;
+      for(const q of pref(9-L,ex))yield {s:q+t,len:L};}}},
+ {label:'Tam hoa kép cuối (aaabbb)',special:false,params:[{v:'x',t:'Toàn bộ',count:90*9*100}],
+  gen:function*(){for(const a of D10)for(const b of D10){if(a===b)continue;for(const q of pref(3,[a]))yield {s:q+a.repeat(3)+b.repeat(3),len:6};}}},
+ {label:'3 cặp tam hoa (aaabbbccc)',special:false,params:[{v:'x',t:'Toàn bộ',count:720}],
+  gen:function*(){for(const a of D10)for(const b of D10)for(const c of D10){if(a===b||b===c||a===c)continue;yield {s:a.repeat(3)+b.repeat(3)+c.repeat(3),len:9};}}},
+ {label:'Tứ quý kép cuối (xaaaabbbb)',special:false,params:[{v:'x',t:'Toàn bộ',count:90*9}],
+  gen:function*(){for(const a of D10)for(const b of D10){if(a===b)continue;for(const q of pref(1,[a]))yield {s:q+a.repeat(4)+b.repeat(4),len:8};}}},
+ {label:'Tài khoản gánh (aaaa x aaaa)',special:false,params:[{v:'x',t:'Toàn bộ',count:100}],
+  gen:function*(){for(const a of D10)for(const g of D10)yield {s:a.repeat(4)+g+a.repeat(4),len:8};}},
+ {label:'Kép từng đôi một cuối (aabbcc…)',special:false,params:[{v:'k3',t:'3 cặp (aabbcc)',count:810*900},{v:'k4',t:'4 cặp (aabbccdd)',count:65610}],
+  gen:function*(p){const k=+p.slice(1);
+    function* seqs(prev,depth){ if(depth===0){yield '';return;} for(const d of D10){ if(d===prev)continue; for(const rest of seqs(d,depth-1)) yield d+d+rest; } }
+    for(const t of seqs(null,k)) for(const q of pref(9-2*k,[t[0]])) yield {s:q+t,len:2*k};}},
+ {label:'Đối xứng ababab cuối',special:false,params:[{v:'k3',t:'3 cặp (ababab)',count:90*900},{v:'k4',t:'4 cặp (abababab)',count:90*9}],
+  gen:function*(p){const k=+p.slice(1);
+    for(const a of D10)for(const b of D10){if(a===b)continue;const t=(a+b).repeat(k);
+      for(const q of pref(9-2*k,[b]))yield {s:q+t,len:2*k};}}},
+ {label:'Lặp 3 số cuối (xyzxyz…)',special:false,params:[{v:'k2',t:'2 lần (xyzxyz)',count:990*900},{v:'k3',t:'3 lần (xyzxyzxyz)',count:990}],
+  gen:function*(p){const k=+p.slice(1);
+    for(let n=0;n<1000;n++){const u=String(n).padStart(3,'0');if(u[0]===u[1]&&u[1]===u[2])continue;const t=u.repeat(k);
+      for(const q of pref(9-3*k,[u[2]]))yield {s:q+t,len:3*k};}}},
+ {label:'Số đảo cuối (abccba)',special:false,params:[{v:'x',t:'Đảo 3 số (abccba)',count:990*900}],
+  gen:function*(){for(let n=0;n<1000;n++){const u=String(n).padStart(3,'0');if(u[0]===u[1]&&u[1]===u[2])continue;
+    const t=u+u[2]+u[1]+u[0];for(const q of pref(3,[u[0]]))yield {s:q+t,len:6};}}},
+ {label:'Cặp 2 số tiến cuối (1213 / 1315 / 0510 / 1020…)',special:false,
+  params:[{v:'b1k3',t:'Bước 1 · 3 cặp',count:98*1000},{v:'b1k4',t:'Bước 1 · 4 cặp',count:97*10},
+          {v:'b2k3',t:'Bước 2 · 3 cặp',count:96*1000},{v:'b2k4',t:'Bước 2 · 4 cặp',count:94*10},
+          {v:'b5k3',t:'Bước 5 · 3 cặp',count:18*1000},{v:'b5k4',t:'Bước 5 · 4 cặp',count:17*10},
+          {v:'b10k3',t:'Bước 10 · 3 cặp',count:8*1000},{v:'b10k4',t:'Bước 10 · 4 cặp',count:7*10}],
+  gen:function*(p){const m=p.match(/b(\d+)k(\d)/),step=+m[1],k=+m[2];
+    for(let st=0;st+step*(k-1)<=99;st++){
+      if(step===5&&st%5!==0)continue; if(step===10&&st%10!==0)continue;
+      let t='';for(let i=0;i<k;i++)t+=String(st+i*step).padStart(2,'0');
+      if(new Set(t).size<2)continue;
+      for(const q of pref(9-2*k,null))yield {s:q+t,len:2*k};}}},
+ {label:'Đuôi đặc biệt',special:false,
+  params:[{v:'1368',t:'Sinh tài lộc phát 1368',count:100000},{v:'68368',t:'Phát tài phát lộc 68368',count:10000},
+          {v:'151618',t:'Mỗi năm mỗi lộc mỗi phát 151618',count:1000},{v:'4078',t:'Đuôi 4078',count:100000},
+          {v:'1102',t:'Đuôi 1102',count:100000},{v:'2204',t:'Đuôi 2204',count:100000}],
+  gen:function*(p){for(const q of pref(9-p.length,null))yield {s:q+p,len:p.length};}},
+];
+function fillCatParams(){
+  const t=CATALOG[+$('cat-type').value];
+  $('cat-param').innerHTML=t.params.map((p,i)=>'<option value="'+p.v+'">'+p.t+' (~'+p.count.toLocaleString('vi-VN')+' dòng)</option>').join('');
+}
+$('cat-type').innerHTML=CATALOG.map((t,i)=>'<option value="'+i+'">'+t.label+'</option>').join('');
+$('cat-type').addEventListener('change',fillCatParams);
+fillCatParams();
+$('btn-cat-export').addEventListener('click',()=>{
+  const err=$('cat-err'),st=$('cat-status'); err.style.display='none'; st.textContent='';
+  if($('branch-input').value.replace(/\D/g,'').length!==4){ err.textContent='Vui lòng nhập mã chi nhánh 4 số ở ô phía trên trước khi xuất.'; err.style.display='block'; return; }
+  const type=CATALOG[+$('cat-type').value];
+  const pv=$('cat-param').value;
+  const pinfo=type.params.find(p=>p.v===pv);
+  if(pinfo.count>MAX_ROWS){ err.textContent='Danh sách này khoảng '+pinfo.count.toLocaleString('vi-VN')+' dòng, vượt giới hạn 1.000.000 — hãy chọn độ dài lớn hơn.'; err.style.display='block'; return; }
+  st.textContent='Đang tạo danh sách… vui lòng chờ (danh sách lớn có thể mất vài chục giây).';
+  setTimeout(()=>{
+    const branch=getBranch();
+    const rows=[]; let stt=0;
+    for(const item of type.gen(pv)){
+      const full=branch+item.s;
+      const f=officialFee(item.len,type.special);
+      rows.push([++stt,csvAcc(full),'"'+type.label.replace(/"/g,'""')+'"',item.len,f.min,f.max==null?'Thỏa thuận':f.max]);
+      if(stt>=MAX_ROWS) break;
+    }
+    downloadCSV('Danh_sach_'+type.label.replace(/[^A-Za-z0-9]+/g,'_')+'_'+pv+'_'+branch+'.csv',
+      ['STT','So tai khoan','Loai so dep','So chu so dep','Phi toi thieu (VND)','Phi toi da (VND)'],rows);
+    st.textContent='Đã xuất '+stt.toLocaleString('vi-VN')+' số tài khoản (mã chi nhánh '+branch+').';
+  },50);
+});
+
+/* ============ KHO SỐ (VB 3879) ============ */
+const KHOSO=[
+  ['1','Số lặp','Từ 3 số trở lên trùng nhau'],
+  ['2','Tam hoa','2 cặp số (xxx000111, 000111xxx, xx000111x…) · 3 cặp số (000000111, 000111222, …, 888999999)'],
+  ['3','Tài khoản gánh','Cặp 4 số đầu và 4 số cuối tạo thành số lặp (0000x0000, …, 9999x9999)'],
+  ['4','Kép từng đôi một','Từng cặp đôi trùng nhau (xxx001100, 001100xxx, x001100xx, x00112233, 00112233x…)'],
+  ['5','Tứ quý kép','2 cặp số (x00001111, 00001111x, …, x99998888, 99998888x)'],
+  ['6','Đối xứng','2 số cuối lặp lại 2 số liền kề (xxxxx0101…9898) · lặp 3 lần (xxx010101…) · lặp 4 lần (x01010101…) · 3 số cuối lặp 3 số giữa (xxx001001…) · 3 số cuối lặp 3 lần (001001001…998998998)'],
+  ['7','Số đảo','Đảo 2 số: 2 số cuối đảo 2 số trước liền kề (xxxxx0110…xxxxx9889) · Đảo 3 số: 3 số cuối đảo 3 số trước liền kề (xxx011110…xxx986689)'],
+  ['8','Số tiến','Số tiến liền nhau từ 3 số trở lên · Số tiến chẵn từ 3 số · Số tiến lẻ từ 3 số · Cặp 2 số tiến 1 đơn vị · tiến 2 đơn vị · tiến 5 đơn vị (bội số của 5) · tiến 10 đơn vị tròn chục'],
+  ['9','Lộc phát','Từ 2 đến 9 số tạo thành từ các số 6 và 8'],
+  ['10','Thần tài','Từ 2 đến 9 số tạo thành từ các số 7 và 9'],
+  ['11','Trường cửu phát','Từ 2 đến 9 số tạo thành từ các số 8 và 9'],
+  ['12','Trường cửu lộc','Từ 2 đến 9 số tạo thành từ các số 6 và 9'],
+  ['13','Sinh tài lộc phát','4 số cuối là 1368 (xxxxx1368)'],
+  ['14','Phát tài phát lộc','5 số cuối là 68368 (xxxx68368)'],
+  ['15','Mỗi năm mỗi lộc mỗi phát','6 số cuối là 151618 (xxx151618)'],
+  ['16','Các loại số khác','4 số cuối là 4078 (xxxxx4078) · 4 số cuối là 1102 (xxxxx1102) · 4 số cuối là 2204 (xxxxx2204)'],
+];
+$('khoso-rows').innerHTML=KHOSO.map(r=>'<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td></tr>').join('');
+
+/* ============ BIỂU PHÍ (QĐ 479 — Phụ lục 01) ============ */
+const FEES=[
+  ['Tài khoản có 2 số đẹp; hoặc 3 số đẹp (trừ loại đặc biệt)',300000,500000],
+  ['Tài khoản có 3 số đẹp loại đặc biệt; hoặc 4 số đẹp (trừ loại đặc biệt)',500000,1000000],
+  ['Tài khoản có 4 số đẹp loại đặc biệt; hoặc 5 số đẹp (trừ loại đặc biệt)',1000000,3000000],
+  ['Tài khoản có 5 số đẹp loại đặc biệt; hoặc 6 số đẹp (trừ loại đặc biệt)',3000000,5000000],
+  ['Tài khoản có 6 số đẹp loại đặc biệt; hoặc 7 số đẹp (trừ loại đặc biệt)',8000000,10000000],
+  ['Tài khoản có 7 số đẹp loại đặc biệt; hoặc 8 số đẹp (trừ loại đặc biệt)',10000000,20000000],
+  ['Tài khoản có 8 số đẹp loại đặc biệt; hoặc 9 số đẹp (trừ loại đặc biệt)',25000000,40000000],
+  ['Tài khoản có 9 số đẹp loại đặc biệt',40000000,80000000],
+  ['Tài khoản có từ 10 số đẹp trở lên',100000000,null],
+];
+$('fee-rows').innerHTML=FEES.map(r=>'<tr><td>'+r[0]+'</td><td class="num">'+fmt(r[1])+'</td><td class="num">'+fmt(r[2])+'</td></tr>').join('');
+
+
+</script>
+</body>
+</html>
