@@ -103,7 +103,7 @@
       <div class="sub">Tác giả: Trần Minh Hải - 0938150987 - Agribank CN Bắc Giang II</div>
       <div class="sub" style="opacity:.68;font-style:italic">Ghi chú: Sản phẩm nhờ AI tạo nên có thể có sai sót.</div>
     </div>
-    <div class="hd-badge">Chúc anh chị em tra cứu vui vẻ</div>
+    <div class="hd-badge">Chúc các bạn tra cứu vui vẻ</div>
   </div>
   <nav role="tablist">
     <button class="active" data-tab="tra-cuu">Tra cứu số</button>
@@ -137,7 +137,7 @@
       <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
         <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
         <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
-        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hà Đồ: 1-6 Thủy · 2-7 Hỏa · 3-8 Mộc · 4-9 Kim · 5-0 Thổ. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
+        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hậu thiên bát quái (Lạc Thư): 1-0 Thủy · 3-4 Mộc · 9 Hỏa · 2-5-8 Thổ · 6-7 Kim. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
       </div>
       <div id="sugg-wrap" style="display:none;margin-top:12px">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
@@ -193,7 +193,7 @@
       <h2 style="font-size:.92rem">Các dạng số đẹp nhận diện được</h2>
       <div class="tbl-wrap" style="max-height:300px">
         <table>
-          <thead><tr><th>Loại số</th><th>Vị trí (trong 9 số cuối)</th><th class="num">Khung giá theo QĐ 479</th></tr></thead>
+          <thead><tr><th>Loại số</th><th>Vị trí (trong dãy 13 số)</th><th class="num">Khung giá theo QĐ 479</th></tr></thead>
           <tbody id="pattern-rows"></tbody>
         </table>
       </div>
@@ -271,7 +271,7 @@
 </main>
 
 <footer>
-  Chương trình hỗ trợ nội bộ, tổng hợp từ: VB 3879/NHNo-NCPT (28/4/2021) — triển khai dịch vụ tài khoản số đẹp; QĐ 479/QĐ-NHNo-TCKT (05/4/2021) — biểu phí tạm thời; file kho số chi nhánh 37XX. Mức thu thực tế do Giám đốc chi nhánh quyết định trong khung phí quy định.
+  Chương trình hỗ trợ nội bộ, tổng hợp từ: VB 3879/NHNo-NCPT (28/4/2021) — triển khai dịch vụ tài khoản số đẹp; QĐ 479/QĐ-NHNo-TCKT (05/4/2021) — biểu phí tạm thời. Mức thu thực tế do Giám đốc chi nhánh quyết định trong khung phí quy định.
 </footer>
 
 <script>
@@ -297,7 +297,6 @@ const P = {
   duoi1368:500000, duoi68368:1000000, duoi151618:3000000, duoiKhac:500000,
 };
 const VAT = 1.1;
-const DEFAULT_BRANCH = '2501';
 
 /* ============================================================
    NHẬN DIỆN LOẠI SỐ ĐẸP trên 9 số cuối (chỉ số 0..8)
@@ -470,6 +469,46 @@ function detectPatterns(s){
   return out;
 }
 
+/* ============================================================
+   KẾT HỢP MÃ CHI NHÁNH VỚI 9 SỐ CUỐI (VB 3879: xét số đẹp trên cả dãy,
+   chi nhánh có mã phù hợp có thể kết hợp tối đa 13 số đẹp; từ 10 số đẹp
+   trở lên phí 100.000.000 — Thỏa thuận theo QĐ 479).
+   Các dạng nối liền được qua ranh giới: số lặp, số tiến liền nhau,
+   và cặp số 6-8 / 7-9 / 8-9 / 6-9. Dãy kết hợp phải chứa ít nhất
+   1 số của mã chi nhánh và 1 số của 9 số cuối.
+   Bảng nhận diện hiển thị song song cả cách tính riêng 9 số cuối
+   (cho chi nhánh áp dụng cách này) và cách tính kết hợp mã chi nhánh.
+   ============================================================ */
+const lenOf=p=>p.totalLen||p.pos.length;
+function detectCombos(branch,suffix){
+  const full=branch+suffix, out=[];
+  const push=(label,start,end,minLen,special)=>{
+    const len=end-start+1;
+    if(len<minLen||start>3||end<4) return;      // đạt độ dài tối thiểu và vắt qua mã chi nhánh
+    const pos=[]; for(let i=Math.max(start,4);i<=end;i++) pos.push(i-4);
+    const bpos=[]; for(let i=start;i<=Math.min(end,3);i++) bpos.push(i);
+    out.push({name:label+' '+len+' số ('+full.slice(start,end+1)+') — kết hợp mã chi nhánh',
+      pos,bpos,totalLen:len,price:len>=10?100000000:1000000*len,special:!!special});
+  };
+  // 1. Số lặp vắt qua ranh giới (từ 3 số)
+  for(let i=0;i<13;){ let j=i; while(j+1<13&&full[j+1]===full[i])j++; push('Số lặp',i,j,3,true); i=j+1; }
+  // 2. Số tiến liền nhau vắt qua ranh giới (từ 3 số)
+  for(let i=0;i<13;){ let j=i; while(j+1<13&&full.charCodeAt(j+1)===full.charCodeAt(j)+1)j++; push('Số tiến liền nhau',i,j,3,true); i=j+1; }
+  // 3. Cặp số may mắn vắt qua ranh giới (từ 2 số, phải chứa cả 2 chữ số)
+  const sets=[['6','8','Lộc phát (6 & 8)',true],['7','9','Thần tài (7 & 9)',false],
+              ['8','9','Trường cửu phát (8 & 9)',false],['6','9','Trường cửu lộc (6 & 9)',false]];
+  for(const [a,b,label,sp] of sets){
+    for(let i=0;i<13;){
+      if(full[i]!==a&&full[i]!==b){i++;continue;}
+      let j=i; while(j+1<13&&(full[j+1]===a||full[j+1]===b))j++;
+      const seg=full.slice(i,j+1);
+      if(seg.includes(a)&&seg.includes(b)) push(label,i,j,2,sp);
+      i=j+1;
+    }
+  }
+  return out;
+}
+
 /* Khung phí chính thức theo QĐ 479 dựa trên số lượng số đẹp + loại đặc biệt */
 function officialFee(count, special){
   const F=(a,b)=>({min:a,max:b});
@@ -505,18 +544,23 @@ document.querySelectorAll('nav button').forEach(btn=>{
 function lookup(){
   const errEl=$('acc-err'); errEl.style.display='none';
   let v=$('acc-input').value.replace(/\D/g,'');
-  if(v.length===9) v=getBranch()+v;
-  if(v.length!==13){ errEl.textContent='Vui lòng nhập đủ 13 số (hoặc 9 số cuối).'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
+  if(v.length===9){
+    const br=getBranch();
+    if(!br){ errEl.textContent='Bạn nhập 9 số cuối — hãy điền thêm mã chi nhánh 4 số ở ô bên dưới, hoặc nhập đủ 13 số.'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
+    v=br+v;
+  }
+  if(v.length!==13){ errEl.textContent='Vui lòng nhập đủ 13 số (hoặc 9 số cuối kèm mã chi nhánh).'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
   $('acc-input').value=v;
   const branch=v.slice(0,4), suffix=v.slice(4);
-  const pats=detectPatterns(suffix);
-  const feeKey=p=>{const f=officialFee(p.pos.length,p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
+  const pats=[...detectPatterns(suffix),...detectCombos(branch,suffix)];
+  const feeKey=p=>{const f=officialFee(lenOf(p),p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
   pats.sort((a,b)=>feeKey(b)-feeKey(a)||b.price-a.price);
 
   /* Vẽ dải số */
   const strip=$('digit-strip'); strip.innerHTML='';
   const hitSet=new Set(); pats.forEach(p=>p.pos.forEach(i=>hitSet.add(i)));
-  [...branch].forEach(c=>{const el=document.createElement('div');el.className='cell branch';el.textContent=c;strip.appendChild(el);});
+  const bHit=new Set(); pats.forEach(p=>{if(p.bpos)p.bpos.forEach(i=>bHit.add(i));});
+  [...branch].forEach((c,i)=>{const el=document.createElement('div');el.className='cell branch'+(bHit.has(i)?' hit':'');el.textContent=c;strip.appendChild(el);});
   const gap=document.createElement('div');gap.className='gap';strip.appendChild(gap);
   [...suffix].forEach((c,i)=>{const el=document.createElement('div');el.className='cell'+(hitSet.has(i)?' hit':'');el.textContent=c;strip.appendChild(el);});
 
@@ -525,9 +569,9 @@ function lookup(){
       không cộng dồn vị trí của các loại trùng nhau) */
   const best=pats[0]||null;
   if(best){
-    const f=officialFee(best.pos.length,best.special);
-    $('fee-range').textContent=fmt(f.min)+' — '+fmt(f.max)+' đ';
-    $('fee-range-note').textContent='Theo loại cao nhất: '+best.name+' ('+best.pos.length+' số đẹp'+(best.special?' · nhóm đặc biệt':'')+') — biên độ do Giám đốc chi nhánh thỏa thuận.';
+    const f=officialFee(lenOf(best),best.special);
+    $('fee-range').textContent=f.max==null?fmt(f.min)+' đ — Thỏa thuận':fmt(f.min)+' — '+fmt(f.max)+' đ';
+    $('fee-range-note').textContent='Theo loại cao nhất: '+best.name+' ('+lenOf(best)+' số đẹp'+(best.special?' · nhóm đặc biệt':'')+') — biên độ do Giám đốc chi nhánh thỏa thuận.';
   } else {
     $('fee-range').textContent='Phí theo yêu cầu: 300.000 — 3.000.000 đ';
     $('fee-range-note').textContent='Số không thuộc cấu trúc kho số — áp dụng mục 2 biểu phí (mở theo yêu cầu, nếu còn).';
@@ -544,10 +588,11 @@ function lookup(){
     tb.innerHTML='<tr><td colspan="3" class="muted">Không nhận diện được dạng số đẹp nào trong 9 số cuối.</td></tr>';
   } else pats.forEach(p=>{
     const tr=document.createElement('tr');
-    const f=officialFee(p.pos.length,p.special);
+    const f=officialFee(lenOf(p),p.special);
+    const viTri=(p.bpos?p.bpos.map(i=>i+1).join(', ')+', ':'')+p.pos.map(i=>i+5).join(', ');
     tr.innerHTML='<td>'+p.name+(p.special?' <span class="tag special">đặc biệt</span>':'')+'</td>'+
-      '<td class="mono">'+p.pos.map(i=>i+5).join(', ')+'</td>'+
-      '<td class="num">'+fmt(f.min)+' — '+fmt(f.max)+' đ</td>';
+      '<td class="mono">'+viTri+'</td>'+
+      '<td class="num">'+(f.max==null?fmt(f.min)+' đ — Thỏa thuận':fmt(f.min)+' — '+fmt(f.max)+' đ')+'</td>';
     tb.appendChild(tr);
   });
 
@@ -569,17 +614,92 @@ const NAP_AM=[
  ['Sa Trung Kim','Kim'],['Sơn Hạ Hỏa','Hỏa'],['Bình Địa Mộc','Mộc'],['Bích Thượng Thổ','Thổ'],['Kim Bạch Kim','Kim'],
  ['Phú Đăng Hỏa','Hỏa'],['Thiên Hà Thủy','Thủy'],['Đại Trạch Thổ','Thổ'],['Thoa Xuyến Kim','Kim'],['Tang Đố Mộc','Mộc'],
  ['Đại Khê Thủy','Thủy'],['Sa Trung Thổ','Thổ'],['Thiên Thượng Hỏa','Hỏa'],['Thạch Lựu Mộc','Mộc'],['Đại Hải Thủy','Thủy']];
-const HA_DO={'Thủy':[1,6],'Hỏa':[2,7],'Mộc':[3,8],'Kim':[4,9],'Thổ':[5,0]};
+/* Ngũ hành chữ số theo Hậu thiên bát quái (Lạc Thư): 1 Khảm-Thủy, 2 Khôn-Thổ, 3 Chấn-Mộc,
+   4 Tốn-Mộc, 5 trung cung-Thổ, 6 Càn-Kim, 7 Đoài-Kim, 8 Cấn-Thổ, 9 Ly-Hỏa, 0 quy về Thủy */
+const HA_DO={'Thủy':[1,0],'Mộc':[3,4],'Hỏa':[9],'Thổ':[2,5,8],'Kim':[6,7]};
 const SINH={'Kim':'Thủy','Thủy':'Mộc','Mộc':'Hỏa','Hỏa':'Thổ','Thổ':'Kim'};   // A sinh B
 const KHAC={'Kim':'Mộc','Mộc':'Thổ','Thổ':'Thủy','Thủy':'Hỏa','Hỏa':'Kim'};   // A khắc B
 const inv=(map,target)=>Object.keys(map).find(k=>map[k]===target);
 
 let MENH=null; // {year, canChi, napAm, hanh, hop:[..], ky:[..]}
+
+/* ---- Quy đổi dương lịch → âm lịch (thuật toán thiên văn Hồ Ngọc Đức, múi giờ +7) ---- */
+function jdFromDate(dd,mm,yy){
+  const a=Math.floor((14-mm)/12), y=yy+4800-a, m=mm+12*a-3;
+  let jd=dd+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
+  if(jd<2299161) jd=dd+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-32083;
+  return jd;
+}
+function NewMoon(k){
+  const T=k/1236.85, T2=T*T, T3=T2*T, dr=Math.PI/180;
+  let Jd1=2415020.75933+29.53058868*k+0.0001178*T2-0.000000155*T3;
+  Jd1+=0.00033*Math.sin((166.56+132.87*T-0.009173*T2)*dr);
+  const M=359.2242+29.10535608*k-0.0000333*T2-0.00000347*T3;
+  const Mpr=306.0253+385.81691806*k+0.0107306*T2+0.00001236*T3;
+  const F=21.2964+390.67050646*k-0.0016528*T2-0.00000239*T3;
+  let C1=(0.1734-0.000393*T)*Math.sin(M*dr)+0.0021*Math.sin(2*dr*M);
+  C1=C1-0.4068*Math.sin(Mpr*dr)+0.0161*Math.sin(dr*2*Mpr);
+  C1=C1-0.0004*Math.sin(dr*3*Mpr);
+  C1=C1+0.0104*Math.sin(dr*2*F)-0.0051*Math.sin(dr*(M+Mpr));
+  C1=C1-0.0074*Math.sin(dr*(M-Mpr))+0.0004*Math.sin(dr*(2*F+M));
+  C1=C1-0.0004*Math.sin(dr*(2*F-M))-0.0006*Math.sin(dr*(2*F+Mpr));
+  C1=C1+0.0010*Math.sin(dr*(2*F-Mpr))+0.0005*Math.sin(dr*(2*Mpr+M));
+  let deltat;
+  if(T<-11) deltat=0.001+0.000839*T+0.0002261*T2-0.00000845*T3-0.000000081*T*T3;
+  else deltat=-0.000278+0.000265*T+0.000262*T2;
+  return Jd1+C1-deltat;
+}
+function SunLongitude(jdn){
+  const T=(jdn-2451545.0)/36525, T2=T*T, dr=Math.PI/180;
+  const M=357.52910+35999.05030*T-0.0001559*T2-0.00000048*T*T2;
+  const L0=280.46645+36000.76983*T+0.0003032*T2;
+  let DL=(1.914600-0.004817*T-0.000014*T2)*Math.sin(dr*M);
+  DL=DL+(0.019993-0.000101*T)*Math.sin(dr*2*M)+0.000290*Math.sin(dr*3*M);
+  let L=(L0+DL)*dr;
+  L=L-Math.PI*2*Math.floor(L/(Math.PI*2));
+  return L;
+}
+const getNewMoonDay=(k,tz)=>Math.floor(NewMoon(k)+0.5+tz/24);
+const getSunLongitude=(dayNumber,tz)=>Math.floor(SunLongitude(dayNumber-0.5-tz/24)/Math.PI*6);
+function getLunarMonth11(yy,tz){
+  const off=jdFromDate(31,12,yy)-2415021;
+  const k=Math.floor(off/29.530588853);
+  let nm=getNewMoonDay(k,tz);
+  if(getSunLongitude(nm,tz)>=9) nm=getNewMoonDay(k-1,tz);
+  return nm;
+}
+function getLeapMonthOffset(a11,tz){
+  const k=Math.floor((a11-2415021.076998695)/29.530588853+0.5);
+  let last=0,i=1,arc=getSunLongitude(getNewMoonDay(k+i,tz),tz);
+  do{ last=arc; i++; arc=getSunLongitude(getNewMoonDay(k+i,tz),tz); }while(arc!=last&&i<14);
+  return i-1;
+}
+function convertSolar2Lunar(dd,mm,yy,tz){
+  const dayNumber=jdFromDate(dd,mm,yy);
+  const k=Math.floor((dayNumber-2415021.076998695)/29.530588853);
+  let monthStart=getNewMoonDay(k+1,tz);
+  if(monthStart>dayNumber) monthStart=getNewMoonDay(k,tz);
+  let a11=getLunarMonth11(yy,tz), b11=a11, lunarYear;
+  if(a11>=monthStart){ lunarYear=yy; a11=getLunarMonth11(yy-1,tz); }
+  else{ lunarYear=yy+1; b11=getLunarMonth11(yy+1,tz); }
+  const lunarDay=dayNumber-monthStart+1;
+  const diff=Math.floor((monthStart-a11)/29);
+  let lunarLeap=0, lunarMonth=diff+11;
+  if(b11-a11>365){
+    const leapMonthDiff=getLeapMonthOffset(a11,tz);
+    if(diff>=leapMonthDiff){ lunarMonth=diff+10; if(diff==leapMonthDiff) lunarLeap=1; }
+  }
+  if(lunarMonth>12) lunarMonth=lunarMonth-12;
+  if(lunarMonth>=11&&diff<4) lunarYear=lunarYear-1;
+  return [lunarDay,lunarMonth,lunarYear,lunarLeap];
+}
 function calcMenh(){
   const v=$('dob-input').value;
   const box=$('menh-box');
   if(!v){ MENH=null; box.style.display='none'; applyMenhToResult(); return; }
-  const year=Number(v.slice(0,4));
+  const [sy,sm,sd]=v.split('-').map(Number);
+  const [ld,lm,ly]=convertSolar2Lunar(sd,sm,sy,7);   // quy đổi sang âm lịch (múi giờ +7)
+  const year=ly;
   const idx=((year-4)%60+60)%60;
   const canChi=CAN[idx%10]+' '+CHI[idx%12];
   const [napAm,hanh]=NAP_AM[Math.floor(idx/2)];
@@ -588,7 +708,9 @@ function calcMenh(){
   const hop=[...HA_DO[sinhMenh],...HA_DO[hanh]];
   const ky=[...HA_DO[khacMenh]];
   MENH={year,canChi,napAm,hanh,hop,ky,sinhMenh,khacMenh};
-  $('menh-title').textContent='Năm '+year+' — '+canChi+' · Mệnh '+hanh+' ('+napAm+')';
+  $('menh-title').textContent='Dương lịch '+String(sd).padStart(2,'0')+'/'+String(sm).padStart(2,'0')+'/'+sy
+    +' → Âm lịch '+String(ld).padStart(2,'0')+'/'+String(lm).padStart(2,'0')+'/'+ly
+    +' — '+canChi+' · Mệnh '+hanh+' ('+napAm+')';
   $('menh-detail').innerHTML=
     'Số <b>hợp mệnh</b>: <b>'+hop.join(', ')+'</b> (hành '+sinhMenh+' tương sinh và hành '+hanh+' bản mệnh) &nbsp;·&nbsp; '+
     'Số <b>nên tránh</b>: <b>'+ky.join(', ')+'</b> (hành '+khacMenh+' khắc '+hanh+').'+
@@ -619,7 +741,7 @@ $('dob-input').addEventListener('change',calcMenh);
 /* ============ TIỆN ÍCH CHUNG ============ */
 function getBranch(){
   const b=$('branch-input').value.replace(/\D/g,'');
-  return b.length===4?b:DEFAULT_BRANCH;
+  return b.length===4?b:'';
 }
 function downloadCSV(name, header, rows){
   // rows: mảng mảng; Số TK bọc ="..." để Excel không đổi thành số mũ
@@ -721,6 +843,59 @@ function* pairTails(a,b,L){ // chuỗi dài L từ {a,b} chứa cả 2 ký tự
   }
 }
 const CATALOG=[
+ {label:'Kết hợp mã chi nhánh (từ 10 số đẹp trở lên — 100 triệu/Thỏa thuận)',special:true,
+  params:[{v:'auto',t:'Theo mã chi nhánh đang nhập',count:0}],
+  gen:function*(){
+    const br=getBranch(); if(br.length!==4) return;
+    const seen=new Set();
+    const emit=function*(s,len,lab){ if(!seen.has(s)){ seen.add(s); yield {s,len,lab}; } };
+    // 1) Số lặp: mã CN kết thúc bằng k chữ số d giống nhau → 9 số cuối mở đầu bằng d lặp m, k+m>=10
+    let k=1; while(k<4&&br[3-k]===br[3])k++;
+    const d=br[3];
+    for(let m=Math.max(10-k,1);m<=9;m++){
+      const free=9-m;
+      if(free===0){ yield* emit(d.repeat(9),k+9,'Số lặp kết hợp mã CN'); continue; }
+      for(let r=0;r<10**free;r++){
+        const rest=String(r).padStart(free,'0');
+        if(rest[0]===d) continue;
+        yield* emit(d.repeat(m)+rest,k+m,'Số lặp kết hợp mã CN');
+      }
+    }
+    // 2) Số tiến liền nhau: đuôi mã CN là dãy tăng dần k2 số, 9 số cuối nối tiếp thêm m số
+    let k2=1; while(k2<4&&br.charCodeAt(3-k2)+1===br.charCodeAt(3-k2+1))k2++;
+    const e=+br[3];
+    for(let m=Math.max(10-k2,1);m<=9&&e+m<=9;m++){
+      let t=''; for(let x=1;x<=m;x++)t+=String(e+x);
+      const free=9-m;
+      if(free===0){ yield* emit(t,k2+m,'Số tiến liền nhau kết hợp mã CN'); continue; }
+      for(let r=0;r<10**free;r++){
+        const rest=String(r).padStart(free,'0');
+        if(+rest[0]===e+m+1) continue;
+        yield* emit(t+rest,k2+m,'Số tiến liền nhau kết hợp mã CN');
+      }
+    }
+    // 3) Cặp số may mắn 6-8 / 7-9 / 8-9 / 6-9
+    for(const [a,b,lab] of [['6','8','Lộc phát (6 & 8) kết hợp mã CN'],['7','9','Thần tài (7 & 9) kết hợp mã CN'],
+                            ['8','9','Trường cửu phát (8 & 9) kết hợp mã CN'],['6','9','Trường cửu lộc (6 & 9) kết hợp mã CN']]){
+      let kb=0; for(let i=3;i>=0;i--){ if(br[i]===a||br[i]===b)kb++; else break; }
+      if(kb===0) continue;
+      const btail=br.slice(4-kb);
+      for(let m=Math.max(10-kb,1);m<=9;m++){
+        const free=9-m;
+        for(let mask=0;mask<2**m;mask++){
+          let head=''; for(let x=m-1;x>=0;x--)head+=((mask>>x)&1)?b:a;
+          const block=btail+head;
+          if(!(block.includes(a)&&block.includes(b))) continue;
+          if(free===0){ yield* emit(head,kb+m,lab); continue; }
+          for(let r=0;r<10**free;r++){
+            const rest=String(r).padStart(free,'0');
+            if(rest[0]===a||rest[0]===b) continue;
+            yield* emit(head+rest,kb+m,lab);
+          }
+        }
+      }
+    }
+  }},
  {label:'Số lặp cuối (aaa…)',special:true,params:[4,5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số lặp',count:10*9*(10**Math.max(9-L-1,0))*(9-L>0?1:0)||10*(L===9?1:0)})),
   gen:function*(p){const L=+p.slice(1);for(const d of D10)for(const q of pref(9-L,[d]))yield {s:q+d.repeat(L),len:L};}},
  {label:'Lộc phát cuối (6 & 8)',special:true,params:[5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số cuối',count:(2**L-2)*( L===9?1:9*(10**Math.max(9-L-1,0)) )})),
@@ -778,7 +953,7 @@ const CATALOG=[
 ];
 function fillCatParams(){
   const t=CATALOG[+$('cat-type').value];
-  $('cat-param').innerHTML=t.params.map((p,i)=>'<option value="'+p.v+'">'+p.t+' (~'+p.count.toLocaleString('vi-VN')+' dòng)</option>').join('');
+  $('cat-param').innerHTML=t.params.map(p=>'<option value="'+p.v+'">'+p.t+(p.count?' (~'+p.count.toLocaleString('vi-VN')+' dòng)':'')+'</option>').join('');
 }
 $('cat-type').innerHTML=CATALOG.map((t,i)=>'<option value="'+i+'">'+t.label+'</option>').join('');
 $('cat-type').addEventListener('change',fillCatParams);
@@ -797,8 +972,14 @@ $('btn-cat-export').addEventListener('click',()=>{
     for(const item of type.gen(pv)){
       const full=branch+item.s;
       const f=officialFee(item.len,type.special);
-      rows.push([++stt,csvAcc(full),'"'+type.label.replace(/"/g,'""')+'"',item.len,f.min,f.max==null?'Thỏa thuận':f.max]);
+      rows.push([++stt,csvAcc(full),'"'+(item.lab||type.label).replace(/"/g,'""')+'"',item.len,f.min,f.max==null?'Thỏa thuận':f.max]);
       if(stt>=MAX_ROWS) break;
+    }
+    if(rows.length===0){
+      st.textContent='';
+      err.textContent='Mã chi nhánh '+branch+' không kết hợp được thành dạng từ 10 số đẹp trở lên (đuôi mã CN không phải số lặp / số tiến / cặp 6-8, 7-9, 8-9, 6-9).';
+      err.style.display='block';
+      return;
     }
     downloadCSV('Danh_sach_'+type.label.replace(/[^A-Za-z0-9]+/g,'_')+'_'+pv+'_'+branch+'.csv',
       ['STT','So tai khoan','Loai so dep','So chu so dep','Phi toi thieu (VND)','Phi toi da (VND)'],rows);
