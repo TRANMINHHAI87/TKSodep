@@ -89,6 +89,17 @@
     .digits .cell{width:34px;height:46px;font-size:1.25rem}
     .digits .cell.branch{width:28px;height:40px;font-size:1rem}
     html{font-size:15px}
+    /* Bảng gói gọn trong màn hình: các cột tự xuống dòng, không kéo ngang */
+    table{font-size:.76rem;table-layout:fixed;width:100%}
+    th,td{padding:7px 6px;word-break:break-word;overflow-wrap:anywhere;white-space:normal}
+    td.mono,th.num,td.num{white-space:normal}
+    td.mono{letter-spacing:.03em;word-break:break-all}
+    #pattern-rows td:nth-child(1){width:40%}
+    #pattern-rows td:nth-child(2){width:27%}
+    #pattern-rows td:nth-child(3){width:33%;text-align:right}
+    #sugg-rows td:nth-child(1){width:38%}
+    #sugg-rows td:nth-child(2){width:32%}
+    #sugg-rows td:nth-child(3){width:30%;text-align:right}
   }
   @media print{header nav,.search-row button,.toolbar{display:none}}
 </style>
@@ -155,18 +166,6 @@
     </div>
   </div>
 
-  <div class="card">
-    <h2>Xuất danh sách số đẹp theo loại (CSV / mở bằng Excel)</h2>
-    <div class="search-row">
-      <select id="cat-type" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:1;min-width:220px"></select>
-      <select id="cat-param" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:0 1 190px;min-width:150px"></select>
-      <button id="btn-cat-export" type="button">⬇ Xuất CSV</button>
-    </div>
-    <div class="hint">Danh sách được ghép với <b>mã chi nhánh</b> ở ô phía trên thành số tài khoản 13 số đúng quy chuẩn, kèm khung phí theo QĐ 479. Danh sách đầy đủ rất lớn nên xuất <b>từng loại</b>; ước lượng số dòng hiển thị bên cạnh từng lựa chọn. Giới hạn mỗi lần xuất: 1.000.000 dòng.</div>
-    <div class="err" id="cat-err"></div>
-    <div class="muted" id="cat-status" style="margin-top:8px"></div>
-  </div>
-
   <div class="card" id="result-card" style="display:none">
     <div class="digits" id="digit-strip"></div>
     <div class="digits-label"><span>Mã chi nhánh</span><span>9 số lựa chọn (nhóm X)</span></div>
@@ -200,6 +199,18 @@
       <p class="muted" style="margin-top:8px">Trường hợp số giao nhau giữa nhiều loại số đẹp: thu phí theo <b>mức cao hơn</b> (mục 7, Phụ lục 02 – QĐ 479).</p>
     </div>
   </div>
+  <div class="card">
+    <h2>Xuất danh sách số đẹp theo loại (CSV / mở bằng Excel)</h2>
+    <div class="search-row">
+      <select id="cat-type" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:1;min-width:220px"></select>
+      <select id="cat-param" style="font:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;flex:0 1 190px;min-width:150px"></select>
+      <button id="btn-cat-export" type="button">⬇ Xuất CSV</button>
+    </div>
+    <div class="hint">Danh sách được ghép với <b>mã chi nhánh</b> ở ô phía trên thành số tài khoản 13 số đúng quy chuẩn, kèm khung phí theo QĐ 479. Danh sách đầy đủ rất lớn nên xuất <b>từng loại</b>; ước lượng số dòng hiển thị bên cạnh từng lựa chọn. Giới hạn mỗi lần xuất: 1.000.000 dòng.</div>
+    <div class="err" id="cat-err"></div>
+    <div class="muted" id="cat-status" style="margin-top:8px"></div>
+  </div>
+
 </section>
 
 <!-- ================= TAB 2: KHO SO ================= -->
@@ -504,6 +515,26 @@ function detectCombos(branch,suffix){
       const seg=full.slice(i,j+1);
       if(seg.includes(a)&&seg.includes(b)) push(label,i,j,2,sp);
       i=j+1;
+    }
+  }
+  // 4. Cặp 2 số tiến bước 1/2/5/10 vắt qua ranh giới (từ 2 cặp; VD mã CN ...01 + 02030405 → 0102030405)
+  for(const step of [1,2,5,10]){
+    let found=false;
+    for(let k=6;k>=2&&!found;k--){                 // ưu tiên chuỗi dài nhất (tối đa 6 cặp = 12 số)
+      const L=2*k;
+      for(let i=0;i+L<=13&&!found;i++){
+        if(i>3||i+L-1<4) continue;                 // phải vắt qua ranh giới mã CN
+        const seg=full.slice(i,i+L), nums=[];
+        for(let x=0;x<L;x+=2) nums.push(+seg.slice(x,x+2));
+        let ok=true;
+        for(let x=1;x<nums.length;x++) if(nums[x]-nums[x-1]!==step){ok=false;break;}
+        if(ok&&step===5)  ok=nums.every(n=>n%5===0);
+        if(ok&&step===10) ok=nums.every(n=>n%10===0);
+        if(ok&&new Set(seg).size>=2){
+          push('Cặp '+k+' số tiến '+step+' đơn vị',i,i+L-1,4,false);
+          found=true;
+        }
+      }
     }
   }
   return out;
@@ -893,6 +924,39 @@ const CATALOG=[
             yield* emit(head+rest,kb+m,lab);
           }
         }
+      }
+    }
+    // 4) Cặp 2 số tiến bước 1/2/5/10: mã CN góp 2 cặp (cả 4 số), 1 cặp (2 số cuối)
+    //    hoặc nửa cặp (số cuối mã CN + số đầu của 9 số sau) — tổng >= 10 số đẹp
+    for(const step of [1,2,5,10]){
+      const okNum=n=>n>=0&&n<=99&&(step!==5||n%5===0)&&(step!==10||n%10===0);
+      const mk=(q0,cnt)=>{ // chuỗi cnt cặp bắt đầu từ q0
+        let t=''; for(let x=0;x<cnt;x++){ const n=q0+x*step; if(!okNum(n)) return null; t+=String(n).padStart(2,'0'); } return t;
+      };
+      // a) mã CN = 2 cặp liên tiếp (VD 0510 bước 5) → 9 số sau tiếp m cặp, m>=3
+      const p1=+br.slice(0,2), p2=+br.slice(2);
+      if(okNum(p1)&&okNum(p2)&&p2-p1===step){
+        for(let m=3;m<=4;m++){
+          const t=mk(p2+step,m); if(!t) continue;
+          const free=9-2*m;
+          for(let r=0;r<10**free;r++) yield* emit(t+String(r).padStart(free,'0'),4+2*m,'Cặp số tiến '+step+' đơn vị kết hợp mã CN');
+        }
+      }
+      // b) 2 số cuối mã CN = 1 cặp → 9 số sau tiếp m cặp, m>=4
+      const p=+br.slice(2);
+      if(okNum(p)){
+        for(let m=4;m<=4;m++){
+          const t=mk(p+step,m); if(!t) continue;
+          const free=9-2*m;
+          for(let r=0;r<10**free;r++) yield* emit(t+String(r).padStart(free,'0'),2+2*m,'Cặp số tiến '+step+' đơn vị kết hợp mã CN');
+        }
+      }
+      // c) số cuối mã CN + số đầu 9 số sau = 1 cặp → tiếp 4 cặp trọn trong 8 số còn lại (đủ 10 số đẹp)
+      for(let d0=0;d0<=9;d0++){
+        const q0=+(br[3]+String(d0));
+        if(!okNum(q0)) continue;
+        const t=mk(q0+step,4); if(!t) continue;
+        yield* emit(String(d0)+t,10,'Cặp số tiến '+step+' đơn vị kết hợp mã CN');
       }
     }
   }},
