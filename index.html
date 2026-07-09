@@ -133,37 +133,9 @@
       <input id="acc-input" inputmode="numeric" maxlength="13" placeholder="Nhập đủ 13 số" autocomplete="off">
       <button id="btn-search">Tra cứu</button>
     </div>
-    <div class="hint">Cấu trúc 13 số: <b>4 số đầu</b> là mã chi nhánh (cố định), <b>9 số cuối</b> chọn từ kho số hoặc theo đề nghị của khách hàng. Có thể nhập 9 số cuối, chương trình tự ghép với mã chi nhánh ở ô bên dưới.</div>
+    <div class="hint">Cấu trúc 13 số: <b>4 số đầu</b> là mã chi nhánh (cố định), <b>9 số cuối</b> chọn từ kho số hoặc theo đề nghị của khách hàng. Có thể nhập 9 số cuối, chương trình tự ghép với mã chi nhánh ở ô <b>Mã CN</b> trong phần Tư vấn số hợp mệnh phía dưới.</div>
     <div class="err" id="acc-err"></div>
 
-    <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)">
-      <label for="dob-input" style="font-weight:700;font-size:.9rem;color:var(--maroon)">Tư vấn số hợp mệnh (tùy chọn)</label>
-      <div class="search-row" style="margin-top:8px">
-        <input type="date" id="dob-input" style="letter-spacing:normal;font-size:1rem;flex:0 1 200px;min-width:170px" min="1920-01-01" max="2025-12-31" title="Ngày sinh khách hàng (dương lịch)">
-        <input id="branch-input" inputmode="numeric" maxlength="4" value="" style="flex:0 1 130px;min-width:110px;font-size:1.05rem;text-align:center" title="Mã chi nhánh — 4 số đầu dãy tài khoản" placeholder="Mã CN">
-        <button id="btn-menh" type="button">Tư vấn số hợp mệnh</button>
-      </div>
-      <div class="hint">Nhập <b>ngày sinh</b> (dương lịch — nếu sinh trước Tết Nguyên đán, chọn lùi về năm trước) và <b>mã chi nhánh</b> (4 số đầu dãy tài khoản), sau đó bấm nút để chương trình gợi ý các dãy số đẹp hợp mệnh.</div>
-      <div class="err" id="menh-err"></div>
-      <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
-        <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
-        <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
-        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hậu thiên bát quái (Lạc Thư): 1-0 Thủy · 3-4 Mộc · 9 Hỏa · 2-5-8 Thổ · 6-7 Kim. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
-      </div>
-      <div id="sugg-wrap" style="display:none;margin-top:12px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-          <h2 style="font-size:.92rem;margin:0">Gợi ý dãy số đẹp hợp mệnh (mã chi nhánh <span id="sugg-branch" class="mono"></span>)</h2>
-          <button id="btn-sugg-export" type="button" style="margin-left:auto;background:var(--gold);color:#fff;border:0;font:inherit;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:8px;cursor:pointer">⬇ Xuất Excel (CSV)</button>
-        </div>
-        <div class="tbl-wrap" style="max-height:420px">
-          <table>
-            <thead><tr><th>Số tài khoản (13 số)</th><th>Loại số đẹp (giá trị cao nhất)</th><th class="num">Khung phí theo QĐ 479</th></tr></thead>
-            <tbody id="sugg-rows"></tbody>
-          </table>
-        </div>
-        <p class="muted" style="margin-top:8px">Khung phí lấy theo hạng mục của <b>loại số có giá cao nhất</b> trong dãy. Bấm vào một dòng để đưa số sang ô tra cứu phía trên. Các số gợi ý chỉ dùng chữ số hợp mệnh — cần kiểm tra trên IPCAS xem số còn hay đã mở trước khi cung cấp cho khách.</p>
-      </div>
-    </div>
   </div>
 
   <div class="card" id="result-card" style="display:none">
@@ -199,6 +171,36 @@
       <p class="muted" style="margin-top:8px">Trường hợp số giao nhau giữa nhiều loại số đẹp: thu phí theo <b>mức cao hơn</b> (mục 7, Phụ lục 02 – QĐ 479).</p>
     </div>
   </div>
+
+  <div class="card" id="menh-card">
+    <h2>Tư vấn số hợp mệnh theo năm sinh</h2>
+      <div class="search-row" style="margin-top:8px">
+        <input type="date" id="dob-input" style="letter-spacing:normal;font-size:1rem;flex:0 1 200px;min-width:170px" min="1920-01-01" max="2025-12-31" title="Ngày sinh khách hàng (dương lịch)">
+        <input id="branch-input" inputmode="numeric" maxlength="4" value="" style="flex:0 1 130px;min-width:110px;font-size:1.05rem;text-align:center" title="Mã chi nhánh — 4 số đầu dãy tài khoản" placeholder="Mã CN">
+        <button id="btn-menh" type="button">Tư vấn số hợp mệnh</button>
+      </div>
+      <div class="hint">Nhập <b>ngày sinh</b> (dương lịch — nếu sinh trước Tết Nguyên đán, chọn lùi về năm trước) và <b>mã chi nhánh</b> (4 số đầu dãy tài khoản), sau đó bấm nút để chương trình gợi ý các dãy số đẹp hợp mệnh.</div>
+      <div class="err" id="menh-err"></div>
+      <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
+        <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
+        <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
+        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hậu thiên bát quái (Lạc Thư): 1-0 Thủy · 3-4 Mộc · 9 Hỏa · 2-5-8 Thổ · 6-7 Kim. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
+      </div>
+      <div id="sugg-wrap" style="display:none;margin-top:12px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <h2 style="font-size:.92rem;margin:0">Gợi ý dãy số đẹp hợp mệnh (mã chi nhánh <span id="sugg-branch" class="mono"></span>)</h2>
+          <button id="btn-sugg-export" type="button" style="margin-left:auto;background:var(--gold);color:#fff;border:0;font:inherit;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:8px;cursor:pointer">⬇ Xuất Excel (CSV)</button>
+        </div>
+        <div class="tbl-wrap" style="max-height:420px">
+          <table>
+            <thead><tr><th>Số tài khoản (13 số)</th><th>Loại số đẹp (giá trị cao nhất)</th><th class="num">Khung phí theo QĐ 479</th></tr></thead>
+            <tbody id="sugg-rows"></tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin-top:8px">Khung phí lấy theo hạng mục của <b>loại số có giá cao nhất</b> trong dãy. Bấm vào một dòng để đưa số sang ô tra cứu phía trên. Các số gợi ý chỉ dùng chữ số hợp mệnh — cần kiểm tra trên IPCAS xem số còn hay đã mở trước khi cung cấp cho khách.</p>
+      </div>
+  </div>
+
   <div class="card">
     <h2>Xuất danh sách số đẹp theo loại (CSV / mở bằng Excel)</h2>
     <div class="search-row">
