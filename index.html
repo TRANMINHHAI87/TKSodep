@@ -435,7 +435,7 @@ function detectPatterns(s){
   for(let i=0;i<n-3;i++){
     if((n-i)%2!==0 && i+4>n) continue;
     let pairs=0, j=i;
-    while(j+1<n && s[j]===s[j+1] && (pairs===0 || s[j]!==s[j-2])){ pairs++; j+=2; }
+    while(j+1<n && s[j]===s[j+1]){ pairs++; j+=2; }
     if(pairs>=2){
       // kiểm tra không phải toàn 1 chữ số (đã tính ở số lặp)
       const seg=s.slice(i,i+pairs*2);
@@ -519,7 +519,26 @@ function detectCombos(branch,suffix){
       i=j+1;
     }
   }
-  // 4. Cặp 2 số tiến bước 1/2/5/10 vắt qua ranh giới (từ 2 cặp; VD mã CN ...01 + 02030405 → 0102030405)
+  // 4. Kép từng đôi một vắt qua ranh giới (từng cặp đôi trùng nhau, từ 2 cặp)
+  {
+    const spans=[];
+    for(let i=0;i<12;i++){
+      let pairs=0,j=i;
+      while(j+1<13&&full[j]===full[j+1]){ pairs++; j+=2; }
+      if(pairs>=2&&new Set(full.slice(i,i+pairs*2)).size>=2) spans.push([i,i+pairs*2-1,pairs]);
+    }
+    for(const [a,b,pairs] of spans){                    // bỏ đoạn nằm trọn trong đoạn khác
+      if(spans.some(([c,d])=>(c<a&&d>=b)||(c<=a&&d>b))) continue;
+      push('Kép từng đôi một '+pairs+' cặp',a,b,4,false);
+    }
+  }
+  // 5. Số tiến chẵn / số tiến lẻ (bước 2) vắt qua ranh giới
+  for(let i=0;i<13;){
+    let j=i; while(j+1<13&&full.charCodeAt(j+1)===full.charCodeAt(j)+2)j++;
+    if(j>i) push('Số tiến '+(+full[i]%2===0?'chẵn':'lẻ'),i,j,3,false);
+    i=j+1;
+  }
+  // 6. Cặp 2 số tiến bước 1/2/5/10 vắt qua ranh giới (VD mã CN ...01 + 02030405 → 0102030405)
   for(const step of [1,2,5,10]){
     let found=false;
     for(let k=6;k>=2&&!found;k--){                 // ưu tiên chuỗi dài nhất (tối đa 6 cặp = 12 số)
@@ -961,6 +980,25 @@ const CATALOG=[
         yield* emit(String(d0)+t,10,'Cặp số tiến '+step+' đơn vị kết hợp mã CN');
       }
     }
+    // 5) Kép từng đôi một: mã CN góp cặp trọn hoặc nửa cặp (VD 2905 + 566778888 → 55 66 77 88 88)
+    for(let s=0;s<=3;s++){
+      let okB=true, L=4-s;
+      for(let x=0;x+1<L;x+=2) if(br[s+x]!==br[s+x+1]) okB=false;
+      if(!okB) continue;
+      const half=L%2;                        // 1 = số cuối mã CN ghép với số đầu của 9 số sau
+      const head=half?br[3]:'';
+      for(let m=Math.floor((9-half)/2);m>=1;m--){
+        const total=L+half+2*m, free=9-half-2*m;
+        if(total<10) continue;
+        const body=function*(x,acc){ if(x===m){yield acc;return;} for(const d of D10) yield* body(x+1,acc+d+d); };
+        for(const bd of body(0,'')){
+          const block=br.slice(s)+head+bd;
+          if(new Set(block).size<2) continue;
+          if(free===0){ yield* emit(head+bd,total,'Kép từng đôi một kết hợp mã CN'); }
+          else for(let r=0;r<10**free;r++) yield* emit(head+bd+String(r).padStart(free,'0'),total,'Kép từng đôi một kết hợp mã CN');
+        }
+      }
+    }
   }},
  {label:'Số lặp cuối (aaa…)',special:true,params:[4,5,6,7,8,9].map(L=>({v:'L'+L,t:L+' số lặp',count:10*9*(10**Math.max(9-L-1,0))*(9-L>0?1:0)||10*(L===9?1:0)})),
   gen:function*(p){const L=+p.slice(1);for(const d of D10)for(const q of pref(9-L,[d]))yield {s:q+d.repeat(L),len:L};}},
@@ -1049,7 +1087,8 @@ $('btn-cat-export').addEventListener('click',()=>{
     }
     downloadCSV('Danh_sach_'+type.label.replace(/[^A-Za-z0-9]+/g,'_')+'_'+pv+'_'+branch+'.csv',
       ['STT','So tai khoan','Loai so dep','So chu so dep','Phi toi thieu (VND)','Phi toi da (VND)'],rows);
-    st.textContent='Đã xuất '+stt.toLocaleString('vi-VN')+' số tài khoản (mã chi nhánh '+branch+').';
+    st.textContent='Đã xuất '+stt.toLocaleString('vi-VN')+' số tài khoản (mã chi nhánh '+branch+').'
+      +(stt>=MAX_ROWS?' Danh sách đã đạt giới hạn 1.000.000 dòng nên có thể còn số chưa xuất hết.':'');
   },50);
 });
 
