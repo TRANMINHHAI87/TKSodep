@@ -82,6 +82,52 @@
   .count-pill{align-self:center;font-size:.8rem;color:var(--ink-2)}
 
   .tbl-wrap{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+
+  /* ---- Hợp mệnh ---- */
+  .btn{font:inherit;font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:1.5px solid transparent}
+  .btn-menh{background:var(--gold-soft);border-color:var(--gold);color:#7A5406;font-size:.98rem;padding:12px 22px}
+  .btn-menh:hover{background:#F6E7C3}
+  .btn-line{background:#fff;border-color:var(--maroon);color:var(--maroon)}
+  .btn-line:hover{background:var(--maroon-soft)}
+  .btn-gold{background:var(--gold-soft);border-color:var(--gold);color:#7A5406}
+  .btn-gold:hover{background:#F6E7C3}
+  .btn:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
+  .card.flash{box-shadow:0 0 0 3px var(--gold);transition:box-shadow .2s}
+  .menh-target{margin-bottom:10px;padding:10px 14px;border-radius:10px;background:var(--maroon-soft);color:var(--ink);font-size:.9rem}
+  .menh-target .mono{font-family:var(--mono);letter-spacing:.06em}
+  .menh-check{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+  .menh-check .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+  .chips{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0 10px;align-items:center}
+  .chip{min-width:34px;height:48px;padding:2px 3px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;font-family:var(--mono);font-weight:700;font-size:1.1rem;border:1.5px solid var(--line);background:#fff;color:var(--ink-2)}
+  .chip small{font-family:var(--sans);font-size:.58rem;font-weight:600;letter-spacing:0}
+  .chip.br{background:var(--maroon-soft);border-color:transparent;color:var(--maroon);opacity:.7;font-size:.95rem;height:32px;min-width:26px}
+  .chip.hop{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .chip.ky{background:var(--sold-soft);border-color:var(--sold);color:var(--sold)}
+  .chip.giai{background:var(--gold-soft);border:1.5px dashed var(--gold);color:#7A5406}
+  .menh-notes{list-style:none;margin:8px 0 0;padding:0}
+  .menh-notes li{position:relative;padding:3px 0 3px 24px;font-size:.86rem;color:var(--ink)}
+  .menh-notes li::before{position:absolute;left:0;top:3px;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#fff}
+  .menh-notes li.giai::before{content:"↻";background:var(--gold)}
+  .menh-notes li.plus::before{content:"+";background:var(--ok)}
+  .menh-notes li.minus::before{content:"−";background:var(--sold)}
+  .rel div{padding:1px 0 1px 18px;position:relative}
+  .rel .dot{position:absolute;left:2px;top:.55em;width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid var(--ink-2)}
+  .rel .dot.hop{background:var(--ok);border-color:var(--ok)}
+  .rel .dot.ky{background:var(--sold);border-color:var(--sold)}
+  .menh-rules{margin-top:8px;font-size:.88rem}
+  .menh-rules summary{cursor:pointer;font-weight:700;color:#7A5406}
+  .menh-rules ul{margin:6px 0 0 18px}
+  .menh-rules li{margin-bottom:4px}
+  .chip-gap{width:6px}
+  .verdict{font-size:1.08rem;font-weight:800;color:var(--ink)}
+  .verdict.good{color:var(--ok)}
+  .verdict.bad{color:var(--sold)}
+  .sugg-bar{display:flex;gap:8px 10px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+  .sugg-bar label{font-size:.88rem;font-weight:600;color:var(--ink)}
+  .sugg-bar select{font:inherit;font-size:.92rem;padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .sugg-bar select:focus{outline:none;border-color:var(--maroon)}
+  .sugg-bar .sp{flex:1}
+  .sugg-bar .rg{display:inline-flex;align-items:center;gap:8px}
   .note-list{font-size:.88rem;color:var(--ink);padding-left:20px}
   .note-list li{margin-bottom:7px}
   footer{max-width:1060px;margin:0 auto;padding:0 24px 40px;font-size:.75rem;color:var(--ink-2)}
@@ -97,9 +143,12 @@
     #pattern-rows td:nth-child(1){width:40%}
     #pattern-rows td:nth-child(2){width:27%}
     #pattern-rows td:nth-child(3){width:33%;text-align:right}
-    #sugg-rows td:nth-child(1){width:38%}
-    #sugg-rows td:nth-child(2){width:32%}
-    #sugg-rows td:nth-child(3){width:30%;text-align:right}
+    #sugg-rows td:nth-child(1){width:41%;letter-spacing:0;font-size:.72rem}
+    #sugg-rows td:nth-child(2){width:31%}
+    #sugg-rows td:nth-child(3){width:28%;text-align:right}
+    #pattern-rows td.mono{word-break:normal}
+    .sugg-bar .sp{display:none}
+    .sugg-bar .btn{flex:1 1 auto;padding:10px 12px}
   }
   @media print{header nav,.search-row button,.toolbar{display:none}}
 </style>
@@ -133,7 +182,7 @@
       <input id="acc-input" inputmode="numeric" maxlength="13" placeholder="Nhập đủ 13 số" autocomplete="off">
       <button id="btn-search">Tra cứu</button>
     </div>
-    <div class="hint">Cấu trúc 13 số: <b>4 số đầu</b> là mã chi nhánh (cố định), <b>9 số cuối</b> chọn từ kho số hoặc theo đề nghị của khách hàng. Có thể nhập 9 số cuối, chương trình tự ghép với mã chi nhánh ở ô <b>Mã CN</b> trong phần Tư vấn số hợp mệnh phía dưới. PHÍ CHƯA BAO GỒM VAT.</div>
+    <div class="hint">Cấu trúc 13 số: <b>4 số đầu</b> là mã chi nhánh (cố định), <b>9 số cuối</b> chọn từ kho số hoặc theo đề nghị của khách hàng. Có thể nhập 9 số cuối, chương trình tự ghép với mã chi nhánh ở ô <b>Mã CN</b> trong phần Tư vấn số hợp mệnh phía dưới. Sau khi tra cứu, bấm nút <b>Xem số này có hợp mệnh hay không</b> ở cuối kết quả để tư vấn theo ngày sinh của khách hàng.</div>
     <div class="err" id="acc-err"></div>
 
   </div>
@@ -170,35 +219,57 @@
       </div>
       <p class="muted" style="margin-top:8px">Trường hợp số giao nhau giữa nhiều loại số đẹp: thu phí theo <b>mức cao hơn</b> (mục 7, Phụ lục 02 – QĐ 479).</p>
     </div>
+
+    <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);text-align:center">
+      <button id="btn-check-menh" type="button" class="btn btn-menh">Xem số này có hợp mệnh hay không</button>
+    </div>
   </div>
 
   <div class="card" id="menh-card">
     <h2>Tư vấn số hợp mệnh theo năm sinh</h2>
-      <div class="search-row" style="margin-top:8px">
-        <input type="date" id="dob-input" style="letter-spacing:normal;font-size:1rem;flex:0 1 200px;min-width:170px" min="1920-01-01" max="2025-12-31" title="Ngày sinh khách hàng (dương lịch)">
-        <input id="branch-input" inputmode="numeric" maxlength="4" value="" style="flex:0 1 130px;min-width:110px;font-size:1.05rem;text-align:center" title="Mã chi nhánh — 4 số đầu dãy tài khoản" placeholder="Mã CN">
-        <button id="btn-menh" type="button">Tư vấn số hợp mệnh</button>
+    <div class="menh-target" id="menh-target" style="display:none"></div>
+    <div class="search-row">
+      <input type="date" id="dob-input" style="letter-spacing:normal;font-size:1rem;flex:0 1 200px;min-width:170px" min="1920-01-01" max="2030-12-31" title="Ngày sinh khách hàng (dương lịch)">
+      <input id="branch-input" inputmode="numeric" maxlength="4" value="" style="flex:0 1 130px;min-width:110px;font-size:1.05rem;text-align:center" title="Mã chi nhánh — 4 số đầu dãy tài khoản" placeholder="Mã CN">
+      <button id="btn-menh" type="button">Tư vấn số hợp mệnh</button>
+    </div>
+    <div class="hint">Nhập <b>ngày sinh</b> theo dương lịch (chương trình tự quy đổi sang âm lịch để tính đúng năm Can Chi, kể cả người sinh trước Tết Nguyên đán) và <b>mã chi nhánh</b> (4 số đầu dãy tài khoản), rồi bấm nút để xem mệnh và nhận gợi ý các dãy số đẹp hợp mệnh theo khoảng phí.</div>
+    <div class="err" id="menh-err"></div>
+
+    <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
+      <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
+      <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
+      <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hậu thiên bát quái (Lạc Thư): 1-0 Thủy · 3-4 Mộc · 9 Hỏa · 2-5-8 Thổ · 6-7 Kim. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
+    </div>
+
+    <div class="menh-check" id="menh-check" style="display:none">
+      <div class="k">Số tài khoản đang xét</div>
+      <div class="chips" id="menh-chips"></div>
+      <div class="verdict" id="menh-check-verdict"></div>
+      <div class="muted" style="margin-top:6px" id="menh-check-note"></div>
+      <ul class="menh-notes" id="menh-notes"></ul>
+      <div class="muted" style="margin-top:8px">Ô xanh: số hợp mệnh · ô đỏ: số nên tránh · ô vàng viền nét đứt: số khắc mệnh nhưng đã được hóa giải · ô trắng: số trung tính · chữ nhỏ dưới mỗi số là hành của số đó · 4 số đầu là mã chi nhánh (cố định, không tính).</div>
+    </div>
+
+    <div id="sugg-wrap" style="display:none;margin-top:16px">
+      <h2 style="font-size:.92rem;margin:0 0 10px">Gợi ý dãy số đẹp hợp mệnh (mã chi nhánh <span id="sugg-branch" class="mono"></span>)</h2>
+      <div class="sugg-bar">
+        <span class="rg"><label for="price-from">Khoảng phí từ</label><select id="price-from"></select></span>
+        <span class="rg"><label for="price-to">đến</label><select id="price-to"></select></span>
+        <span class="sp"></span>
+        <button id="btn-sugg-more" type="button" class="btn btn-line">↻ Gợi ý lô số khác</button>
+        <button id="btn-sugg-export" type="button" class="btn btn-gold">⬇ Xuất Excel (CSV)</button>
       </div>
-      <div class="hint">Nhập <b>ngày sinh</b> (dương lịch — nếu sinh trước Tết Nguyên đán, chọn lùi về năm trước) và <b>mã chi nhánh</b> (4 số đầu dãy tài khoản), sau đó bấm nút để chương trình gợi ý các dãy số đẹp hợp mệnh.</div>
-      <div class="err" id="menh-err"></div>
-      <div id="menh-box" style="display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--gold-soft)">
-        <div style="font-weight:800;color:#7A5406" id="menh-title"></div>
-        <div style="margin-top:6px;font-size:.92rem" id="menh-detail"></div>
-        <div class="muted" style="margin-top:6px">Ngũ hành của chữ số tính theo Hậu thiên bát quái (Lạc Thư): 1-0 Thủy · 3-4 Mộc · 9 Hỏa · 2-5-8 Thổ · 6-7 Kim. Nội dung phong thủy chỉ mang tính tham khảo khi tư vấn khách hàng.</div>
+      <div class="err" id="sugg-err"></div>
+      <div class="muted" id="sugg-count" style="margin:6px 0 8px"></div>
+      <div class="tbl-wrap" style="max-height:420px">
+        <table>
+          <thead><tr><th>Số tài khoản (13 số)</th><th>Loại số đẹp (giá trị cao nhất)</th><th class="num">Khung phí theo QĐ 479</th></tr></thead>
+          <tbody id="sugg-rows"></tbody>
+        </table>
       </div>
-      <div id="sugg-wrap" style="display:none;margin-top:12px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-          <h2 style="font-size:.92rem;margin:0">Gợi ý dãy số đẹp hợp mệnh (mã chi nhánh <span id="sugg-branch" class="mono"></span>)</h2>
-          <button id="btn-sugg-export" type="button" style="margin-left:auto;background:var(--gold);color:#fff;border:0;font:inherit;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:8px;cursor:pointer">⬇ Xuất Excel (CSV)</button>
-        </div>
-        <div class="tbl-wrap" style="max-height:420px">
-          <table>
-            <thead><tr><th>Số tài khoản (13 số)</th><th>Loại số đẹp (giá trị cao nhất)</th><th class="num">Khung phí theo QĐ 479</th></tr></thead>
-            <tbody id="sugg-rows"></tbody>
-          </table>
-        </div>
-        <p class="muted" style="margin-top:8px">Khung phí lấy theo hạng mục của <b>loại số có giá cao nhất</b> trong dãy. Bấm vào một dòng để đưa số sang ô tra cứu phía trên. Các số gợi ý chỉ dùng chữ số hợp mệnh — cần kiểm tra trên IPCAS xem số còn hay đã mở trước khi cung cấp cho khách.</p>
-      </div>
+      <p class="muted" style="margin-top:8px">Khung phí lấy theo <b>loại số có giá cao nhất</b> trong dãy (đã tính cả trường hợp kết hợp mã chi nhánh), sắp xếp từ phí thấp đến cao. Bấm vào một dòng để đưa số lên ô tra cứu. Các số gợi ý chỉ dùng chữ số hợp mệnh — cần kiểm tra trên IPCAS xem số còn hay đã mở trước khi cung cấp cho khách.</p>
+    </div>
   </div>
 
   <div class="card">
@@ -593,20 +664,35 @@ document.querySelectorAll('nav button').forEach(btn=>{
   });
 });
 
+/* 9 bậc khung phí của QĐ 479 (tối thiểu, tối đa) — dùng để xếp hạng và lọc theo khoảng phí */
+const TIERS=[[300000,500000],[500000,1000000],[1000000,3000000],[3000000,5000000],[8000000,10000000],
+             [10000000,20000000],[25000000,40000000],[40000000,80000000],[100000000,null]];
+const tierIdx=f=>TIERS.findIndex(t=>t[0]===f.min&&t[1]===f.max);
+const feeTxt=f=>f.max==null?fmt(f.min)+' đ — Thỏa thuận':fmt(f.min)+' — '+fmt(f.max)+' đ';
+/* Phân tích một số tài khoản: mọi dạng số đẹp (9 số cuối + kết hợp mã chi nhánh),
+   xếp khung phí cao nhất lên đầu. Tra cứu và gợi ý hợp mệnh dùng chung hàm này. */
+function analyzeNumber(branch,suffix){
+  const pats=[...detectPatterns(suffix),...detectCombos(branch,suffix)];
+  const rank=p=>tierIdx(officialFee(lenOf(p),p.special));
+  pats.sort((a,b)=>rank(b)-rank(a)||b.price-a.price);
+  return pats;
+}
+
+let CUR_ACC='';   // số tài khoản 13 số vừa tra cứu (rỗng nếu chưa tra)
 function lookup(){
   const errEl=$('acc-err'); errEl.style.display='none';
+  const fail=msg=>{ errEl.textContent=msg; errEl.style.display='block'; $('result-card').style.display='none'; CUR_ACC=''; applyMenhToResult(); };
   let v=$('acc-input').value.replace(/\D/g,'');
   if(v.length===9){
     const br=getBranch();
-    if(!br){ errEl.textContent='Bạn nhập 9 số cuối — hãy điền thêm mã chi nhánh 4 số ở ô bên dưới, hoặc nhập đủ 13 số.'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
+    if(!br){ fail('Bạn nhập 9 số cuối — hãy điền thêm mã chi nhánh 4 số ở ô Mã CN bên dưới, hoặc nhập đủ 13 số.'); return; }
     v=br+v;
   }
-  if(v.length!==13){ errEl.textContent='Vui lòng nhập đủ 13 số (hoặc 9 số cuối kèm mã chi nhánh).'; errEl.style.display='block'; $('result-card').style.display='none'; return; }
+  if(v.length!==13){ fail('Vui lòng nhập đủ 13 số (hoặc 9 số cuối kèm mã chi nhánh).'); return; }
   $('acc-input').value=v;
+  CUR_ACC=v;
   const branch=v.slice(0,4), suffix=v.slice(4);
-  const pats=[...detectPatterns(suffix),...detectCombos(branch,suffix)];
-  const feeKey=p=>{const f=officialFee(lenOf(p),p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
-  pats.sort((a,b)=>feeKey(b)-feeKey(a)||b.price-a.price);
+  const pats=analyzeNumber(branch,suffix);
 
   /* Vẽ dải số */
   const strip=$('digit-strip'); strip.innerHTML='';
@@ -622,7 +708,7 @@ function lookup(){
   const best=pats[0]||null;
   if(best){
     const f=officialFee(lenOf(best),best.special);
-    $('fee-range').textContent=f.max==null?fmt(f.min)+' đ — Thỏa thuận':fmt(f.min)+' — '+fmt(f.max)+' đ';
+    $('fee-range').textContent=feeTxt(f);
     $('fee-range-note').textContent='Theo loại cao nhất: '+best.name+' ('+lenOf(best)+' số đẹp'+(best.special?' · nhóm đặc biệt':'')+') — biên độ do Giám đốc chi nhánh thỏa thuận.';
   } else {
     $('fee-range').textContent='Phí theo yêu cầu: 300.000 — 3.000.000 đ';
@@ -644,7 +730,7 @@ function lookup(){
     const viTri=(p.bpos?p.bpos.map(i=>i+1).join(', ')+', ':'')+p.pos.map(i=>i+5).join(', ');
     tr.innerHTML='<td>'+p.name+(p.special?' <span class="tag special">đặc biệt</span>':'')+'</td>'+
       '<td class="mono">'+viTri+'</td>'+
-      '<td class="num">'+(f.max==null?fmt(f.min)+' đ — Thỏa thuận':fmt(f.min)+' — '+fmt(f.max)+' đ')+'</td>';
+      '<td class="num">'+feeTxt(f)+'</td>';
     tb.appendChild(tr);
   });
 
@@ -672,6 +758,12 @@ const HA_DO={'Thủy':[1,0],'Mộc':[3,4],'Hỏa':[9],'Thổ':[2,5,8],'Kim':[6,7
 const SINH={'Kim':'Thủy','Thủy':'Mộc','Mộc':'Hỏa','Hỏa':'Thổ','Thổ':'Kim'};   // A sinh B
 const KHAC={'Kim':'Mộc','Mộc':'Thổ','Thổ':'Thủy','Thủy':'Hỏa','Hỏa':'Kim'};   // A khắc B
 const inv=(map,target)=>Object.keys(map).find(k=>map[k]===target);
+const HANH_OF={}; for(const hh in HA_DO) for(const d of HA_DO[hh]) HANH_OF[d]=hh;   // chữ số → hành
+/* Quan hệ giữa hành của một chữ số và bản mệnh:
+   sinh = số sinh mệnh (sinh nhập, tốt nhất) · hoa = cùng hành (tỷ hòa, tốt)
+   tai  = mệnh khắc số (khắc xuất, trung tính) · tiet = mệnh sinh số (sinh xuất, trung tính hơi hao)
+   ky   = số khắc mệnh (khắc nhập, nên tránh) */
+function roleOf(h,menh){ return h===menh?'hoa':SINH[h]===menh?'sinh':KHAC[h]===menh?'ky':SINH[menh]===h?'tiet':'tai'; }
 
 let MENH=null; // {year, canChi, napAm, hanh, hop:[..], ky:[..]}
 
@@ -748,7 +840,7 @@ function convertSolar2Lunar(dd,mm,yy,tz){
 function calcMenh(){
   const v=$('dob-input').value;
   const box=$('menh-box');
-  if(!v){ MENH=null; box.style.display='none'; applyMenhToResult(); return; }
+  if(!v){ clearMenh(); return; }
   const [sy,sm,sd]=v.split('-').map(Number);
   const [ld,lm,ly]=convertSolar2Lunar(sd,sm,sy,7);   // quy đổi sang âm lịch (múi giờ +7)
   const year=ly;
@@ -763,32 +855,97 @@ function calcMenh(){
   $('menh-title').textContent='Dương lịch '+String(sd).padStart(2,'0')+'/'+String(sm).padStart(2,'0')+'/'+sy
     +' → Âm lịch '+String(ld).padStart(2,'0')+'/'+String(lm).padStart(2,'0')+'/'+ly
     +' — '+canChi+' · Mệnh '+hanh+' ('+napAm+')';
+  const T=sinhMenh, K=khacMenh, C=SINH[hanh], W=KHAC[hanh], ds=x=>HA_DO[x].join(', ');
   $('menh-detail').innerHTML=
-    'Số <b>hợp mệnh</b>: <b>'+hop.join(', ')+'</b> (hành '+sinhMenh+' tương sinh và hành '+hanh+' bản mệnh) &nbsp;·&nbsp; '+
-    'Số <b>nên tránh</b>: <b>'+ky.join(', ')+'</b> (hành '+khacMenh+' khắc '+hanh+').'+
-    '<br>Gợi ý ưu tiên các dãy có nhiều chữ số '+hop.join(', ')+' — ví dụ đuôi lặp hoặc lộc phát/thần tài tạo từ các số này.';
+    '<div class="rel">'+
+    '<div><span class="dot hop"></span>Số <b>'+ds(T)+'</b> (hành '+T+') — <b>sinh mệnh</b>: '+T+' sinh '+hanh+', tốt nhất.</div>'+
+    '<div><span class="dot hop"></span>Số <b>'+ds(hanh)+'</b> (hành '+hanh+') — <b>cùng hành với mệnh</b>: tốt.</div>'+
+    '<div><span class="dot"></span>Số <b>'+ds(W)+'</b> (hành '+W+') — mệnh khắc số ('+hanh+' khắc '+W+'): trung tính.</div>'+
+    '<div><span class="dot"></span>Số <b>'+ds(C)+'</b> (hành '+C+') — mệnh sinh số ('+hanh+' sinh '+C+'): trung tính, hơi hao.</div>'+
+    '<div><span class="dot ky"></span>Số <b>'+ds(K)+'</b> (hành '+K+') — <b>khắc mệnh</b>: '+K+' khắc '+hanh+', nên tránh.</div>'+
+    '</div>'+
+    '<details class="menh-rules"><summary>Quan hệ giữa các số đứng liền nhau (xét từ trái sang phải)</summary><ul>'+
+    '<li><b>Hóa giải:</b> số '+K+' đứng liền trước số '+T+' (ví dụ '+HA_DO[K][0]+' rồi '+HA_DO[T][0]+') thì '+K+' sinh '+T+', '+T+' sinh '+hanh+' — số '+K+' đó không còn tính là số nên tránh. Mỗi số '+T+' chỉ hóa giải được một số '+K+' đứng ngay trước.</li>'+
+    '<li><b>Thuận lợi thêm:</b> số '+T+' đứng liền trước số '+hanh+' (ví dụ '+HA_DO[T][0]+' rồi '+HA_DO[hanh][0]+') — tương sinh nối tiếp về bản mệnh.</li>'+
+    '<li><b>Kém hơn:</b> số '+W+' đứng liền trước số '+K+' (ví dụ '+HA_DO[W][0]+' rồi '+HA_DO[K][0]+') mà số '+K+' đó không được hóa giải — '+W+' sinh '+K+', tiếp sức cho số khắc mệnh.</li>'+
+    '</ul></details>';
   box.style.display='block';
   applyMenhToResult();
 }
-function applyMenhToResult(){
-  const kv=$('menh-kv');
-  if($('result-card').style.display!=='block'){ kv.style.display='none'; return; }
-  const v=$('acc-input').value.replace(/\D/g,'');
-  if(!MENH||v.length!==13){ kv.style.display='none'; return; }
-  const suffix=v.slice(4);
-  let nHop=0,nKy=0;
-  [...suffix].forEach(c=>{const d=Number(c); if(MENH.hop.includes(d))nHop++; else if(MENH.ky.includes(d))nKy++;});
-  let verdict;
-  if(nHop>=6&&nKy===0) verdict='Rất hợp mệnh '+MENH.hanh;
-  else if(nHop>=5&&nKy<=1) verdict='Hợp mệnh '+MENH.hanh;
-  else if(nHop>nKy) verdict='Khá hợp mệnh '+MENH.hanh;
-  else if(nKy>nHop) verdict='Chưa hợp — nhiều số thuộc hành '+MENH.khacMenh+' khắc mệnh';
-  else verdict='Trung tính với mệnh '+MENH.hanh;
-  $('menh-verdict').textContent=verdict;
-  $('menh-verdict-note').textContent='Trong 9 số cuối: '+nHop+' số hợp ('+MENH.hop.join(', ')+') · '+nKy+' số kỵ ('+MENH.ky.join(', ')+') — khách sinh năm '+MENH.year+', '+MENH.canChi+', mệnh '+MENH.hanh+' ('+MENH.napAm+'). Chỉ mang tính tham khảo khi tư vấn.';
-  kv.style.display='block';
+/* Xét 9 số cuối theo bản mệnh: quan hệ từng số với mệnh + quan hệ tương sinh giữa các số đứng liền nhau
+   (đọc từ trái sang phải), rồi kết luận mức độ hợp mệnh.
+   - Hóa giải (thông quan): số khắc mệnh đứng liền trước số sinh mệnh thì "tham sinh quên khắc"
+     (VD mệnh Hỏa: Thủy sinh Mộc, Mộc sinh Hỏa) → không còn tính là số nên tránh.
+     Mỗi số sinh mệnh chỉ hóa giải một số khắc mệnh (số khắc mệnh quá nhiều thì không hóa hết).
+   - Số sinh mệnh → số cùng hành mệnh: tương sinh nối tiếp về bản mệnh (nhận xét thuận lợi).
+   - Số bị mệnh khắc → số khắc mệnh chưa hóa giải: tiếp sức cho số khắc mệnh (nhận xét kém hơn). */
+function menhVerdict(suffix){
+  const M=MENH.hanh, T=MENH.sinhMenh, K=MENH.khacMenh, W=KHAC[M];
+  const c=[...suffix].map(ch=>{ const hh=HANH_OF[+ch]; return {d:ch,hanh:hh,role:roleOf(hh,M),giai:false}; });
+  const notes=[], seen=new Set();
+  const note=(type,text)=>{ if(!seen.has(text)){ seen.add(text); notes.push({type,text}); } };
+  for(let i=0;i<c.length;i++){
+    if(c[i].role!=='ky') continue;
+    let j=i; while(j+1<c.length&&c[j+1].role==='ky') j++;          // cụm số khắc mệnh i..j
+    let k=j; while(k+1<c.length&&c[k+1].role==='sinh') k++;        // cụm số sinh mệnh j+1..k đứng liền sau
+    const nK=j-i+1, r=Math.min(nK,k-j);
+    for(let x=j-r+1;x<=j;x++) c[x].giai=true;
+    if(r>0) note('giai','Số '+suffix.slice(j-r+1,j+1)+' ('+K+') đứng liền trước số '+suffix.slice(j+1,j+1+r)+' ('+T+'): '+K+' sinh '+T+', '+T+' sinh '+M
+      +' — số '+K+' được hóa giải, không còn tính là số nên tránh.'
+      +(nK>r?' Còn '+(nK-r)+' số '+K+' đứng trước không được hóa giải vì số '+T+' theo sau không đủ.':''));
+    i=j;
+  }
+  for(let i=0;i+1<c.length;i++){
+    if(c[i].role==='sinh'&&c[i+1].role==='hoa')
+      note('plus','Số '+c[i].d+' ('+T+') đứng liền trước số '+c[i+1].d+' ('+M+'): '+T+' sinh '+M+' — tương sinh nối tiếp về bản mệnh.');
+    if(c[i].role==='tai'&&c[i+1].role==='ky'&&!c[i+1].giai)
+      note('minus','Số '+c[i].d+' ('+W+') đứng liền trước số '+c[i+1].d+' ('+K+'): '+W+' sinh '+K+' — số khắc mệnh được tiếp sức, kém hơn.');
+  }
+  let nHop=0,nKy=0,nGiai=0;
+  for(const x of c){ if(x.role==='sinh'||x.role==='hoa') nHop++; else if(x.giai) nGiai++; else if(x.role==='ky') nKy++; }
+  let text,cls='';
+  if(nHop>=6&&nKy===0){ text='Rất hợp mệnh '+M; cls='good'; }
+  else if(nHop>=5&&nKy<=1){ text='Hợp mệnh '+M; cls='good'; }
+  else if(nHop>nKy){ text='Khá hợp mệnh '+M; cls='good'; }
+  else if(nKy>nHop){ text='Chưa hợp mệnh '+M+' — nhiều số thuộc hành '+K+' (khắc '+M+')'; cls='bad'; }
+  else text='Trung tính với mệnh '+M;
+  return {cells:c,notes,nHop,nKy,nGiai,nTrung:c.length-nHop-nKy-nGiai,text,cls};
 }
-$('dob-input').addEventListener('change',calcMenh);
+/* Cập nhật mọi chỗ hiển thị liên quan tới "số đang xét": nhãn nút, dòng nhắc, kết luận hợp mệnh */
+function applyMenhToResult(){
+  const kv=$('menh-kv'), box=$('menh-check'), tg=$('menh-target');
+  $('btn-menh').textContent=CUR_ACC?'Xem':'Tư vấn số hợp mệnh';
+  if(CUR_ACC){
+    tg.innerHTML='Đang xét số tài khoản <b class="mono">'+CUR_ACC+'</b> — nhập ngày sinh của khách hàng rồi bấm <b>Xem</b> để biết số này có hợp mệnh không và nhận gợi ý các dãy số hợp mệnh.';
+    tg.style.display='block';
+  } else tg.style.display='none';
+  if(!MENH||!CUR_ACC){ kv.style.display='none'; box.style.display='none'; return; }
+  const branch=CUR_ACC.slice(0,4), suffix=CUR_ACC.slice(4);
+  const r=menhVerdict(suffix);
+  const note='Trong 9 số cuối: '+r.nHop+' số hợp · '+r.nKy+' số nên tránh'+(r.nGiai?' · '+r.nGiai+' số khắc mệnh đã được hóa giải':'')+' · '
+    +r.nTrung+' số trung tính. Khách sinh năm âm lịch '+MENH.year+' ('+MENH.canChi+'), mệnh '+MENH.hanh+' ('+MENH.napAm+'). Chỉ mang tính tham khảo khi tư vấn.';
+  $('menh-verdict').textContent=r.text;
+  $('menh-verdict-note').textContent=note;
+  kv.style.display='block';
+  $('menh-chips').innerHTML=[...branch].map(c=>'<span class="chip br">'+c+'</span>').join('')+'<span class="chip-gap"></span>'
+    +r.cells.map(x=>'<span class="chip'+(x.role==='sinh'||x.role==='hoa'?' hop':x.giai?' giai':x.role==='ky'?' ky':'')+'">'+x.d+'<small>'+x.hanh+'</small></span>').join('');
+  const nl=$('menh-notes');
+  nl.innerHTML=r.notes.map(n=>'<li class="'+n.type+'">'+n.text+'</li>').join('');
+  nl.style.display=r.notes.length?'block':'none';
+  const vd=$('menh-check-verdict');
+  vd.textContent='Số '+CUR_ACC+': '+r.text;
+  vd.className='verdict'+(r.cls?' '+r.cls:'');
+  $('menh-check-note').textContent=note;
+  box.style.display='block';
+}
+/* Đổi ngày sinh → xóa kết quả tư vấn cũ; bấm nút mới tính lại (tránh hiển thị kết quả của ngày sinh trước) */
+function clearMenh(){
+  MENH=null; SUGG=[];
+  $('menh-box').style.display='none';
+  $('sugg-wrap').style.display='none';
+  applyMenhToResult();
+}
+$('dob-input').addEventListener('change',clearMenh);
 
 /* ============ TIỆN ÍCH CHUNG ============ */
 function getBranch(){
@@ -806,71 +963,151 @@ function downloadCSV(name, header, rows){
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
 }
 const csvAcc=v=>'="'+v+'"';
-function topFeeOf(suffix){
-  const pats=detectPatterns(suffix);
-  if(!pats.length) return null;
-  const key=p=>{const f=officialFee(p.pos.length,p.special);return (f.max==null?1e12:f.max)*1e10+f.min;};
-  pats.sort((a,b)=>key(b)-key(a)||b.price-a.price);
-  const best=pats[0], f=officialFee(best.pos.length,best.special);
-  return {name:best.name,special:best.special,min:f.min,max:f.max};
-}
 
-/* ============ NÚT "TƯ VẤN SỐ HỢP MỆNH" — SINH DANH SÁCH GỢI Ý ============ */
-let SUGG=[]; // [{full,name,min,max,st}]
-function genSuggestions(){
-  const H=[...new Set(MENH.hop)].map(String);
-  const cands=new Set();
-  const rep=(c,n)=>c.repeat(n);
-  for(const a of H){ cands.add(rep(a,9)); }
+/* ============ GỢI Ý DÃY SỐ ĐẸP HỢP MỆNH THEO KHOẢNG PHÍ ============
+   Mọi số gợi ý chỉ gồm chữ số hợp mệnh. Cách làm: lấy các "đuôi đẹp" ghép từ chữ số hợp mệnh,
+   điền phần còn lại bằng chữ số hợp mệnh, rồi dùng đúng hàm analyzeNumber của phần tra cứu để
+   xác định khung phí — nên phí ở danh sách luôn trùng với phí khi tra cứu số đó. */
+let SUGG=[];        // [{full,name,min,max,ti}]
+let SUGG_SEED=1;    // đổi khi bấm "Gợi ý lô số khác"
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const TAIL_CACHE={};
+function buildTails(H){
+  const key=H.join('');
+  if(TAIL_CACHE[key]) return TAIL_CACHE[key];
+  const set=new Set(), rp=(c,n)=>c.repeat(n);
+  const add=s=>{ if(s.length>=2&&s.length<=9&&[...s].every(c=>H.includes(c))) set.add(s); };
+  for(const a of H) for(let n=3;n<=9;n++) add(rp(a,n));                       // số lặp
   for(const a of H) for(const b of H){ if(a===b) continue;
-    cands.add(rep(a,4)+b+rep(a,4));          // gánh aaaa b aaaa
-    cands.add((a+b).repeat(4)+a);            // ababababa
-    cands.add(rep(a,6)+rep(b,3));            // aaaaaabbb
-    cands.add(rep(a,3)+rep(b,6));
-    cands.add(rep(a,5)+rep(b,4));
-    cands.add(rep(a,4)+rep(b,5));
-    cands.add(a+rep(b,8));                   // lặp cuối 8
-    cands.add(rep(a,2)+rep(b,7));            // lặp cuối 7
-    cands.add(rep(a,3)+rep(b,3)+rep(a,3));
-    cands.add(a+b+a+b+rep(b,5));
+    add(a+b+a+b); add((a+b).repeat(3)); add((a+b).repeat(4));                 // đối xứng abab
+    add(a+a+b+b); add(a+b+b+a); add(a+a+b+b+a+a); add((a+a+b+b).repeat(2));   // kép đôi, số đảo
+    add(rp(a,3)+rp(b,3)); add(rp(a,4)+rp(b,4)); add(rp(a,4)+b+rp(a,4));       // tam hoa kép, tứ quý kép, gánh
+    for(const c of H){ if(c===a||c===b) continue;
+      add(a+a+b+b+c+c); add(a+b+c+c+b+a); add((a+b+c).repeat(2)); add((a+b+c).repeat(3)); add(rp(a,3)+rp(b,3)+rp(c,3));
+      for(const d of H){ if(d===a||d===b||d===c) continue; add(a+a+b+b+c+c+d+d); }
+    }
   }
-  for(const a of H) for(const b of H) for(const c of H){
-    if(a===b||b===c||a===c) continue;
-    cands.add(rep(a,3)+rep(b,3)+rep(c,3));   // 3 cặp tam hoa
-    cands.add((a+b+c).repeat(3));            // lặp 3 số 3 lần
+  for(let st=0;st<=9;st++) for(const step of [1,2]) for(let n=3;st+step*(n-1)<=9;n++){   // số tiến liền nhau / chẵn / lẻ
+    let s=''; for(let k=0;k<n;k++) s+=String(st+k*step); add(s);
   }
-  const branch=getBranch();
-  SUGG=[];
-  for(const s of cands){
-    const info=topFeeOf(s); if(!info) continue;
-    const full=branch+s;
-    SUGG.push({full,name:info.name,min:info.min,max:info.max});
+  for(const [a,b] of [['6','8'],['7','9'],['8','9'],['6','9']]){                          // lộc phát, thần tài, cửu phát, cửu lộc
+    if(!H.includes(a)||!H.includes(b)) continue;
+    for(let L=2;L<=9;L++) for(const t of pairTails(a,b,L)) set.add(t);
   }
-  SUGG.sort((a,b)=>((b.max==null?1e12:b.max)-(a.max==null?1e12:a.max))||(b.min-a.min)||(a.full<b.full?-1:1));
-  $('sugg-branch').textContent=branch;
-  $('sugg-rows').innerHTML=SUGG.map((r,i)=>{
-    return '<tr data-acc="'+r.full+'" style="cursor:pointer" title="Bấm để tra cứu số này">'+
-      '<td class="mono">'+r.full+'</td><td>'+r.name+'</td>'+
-      '<td class="num">'+fmt(r.min)+' — '+fmt(r.max)+' đ</td></tr>';
-  }).join('');
-  document.querySelectorAll('#sugg-rows tr').forEach(tr=>tr.addEventListener('click',()=>{
-    $('acc-input').value=tr.dataset.acc; lookup();
-    window.scrollTo({top:0,behavior:'smooth'});
-  }));
-  $('sugg-wrap').style.display='block';
+  for(const step of [1,2,5,10]) for(let k=2;k<=4;k++) for(let st=0;st+step*(k-1)<=99;st++){ // cặp 2 số tiến
+    if((step===5&&st%5)||(step===10&&st%10)) continue;
+    let s=''; for(let x=0;x<k;x++) s+=String(st+x*step).padStart(2,'0'); add(s);
+  }
+  for(const t of ['1368','68368','151618','4078','1102','2204']) add(t);                  // đuôi đặc biệt
+  const arr=[];
+  for(const t of set){
+    let base=-1;
+    for(const x of detectPatterns(t)){ const ti=tierIdx(officialFee(x.pos.length,x.special)); if(ti>base) base=ti; }
+    if(base>=0) arr.push({t,base});      // base = bậc phí thấp nhất mà số kết thúc bằng đuôi này có thể đạt
+  }
+  return TAIL_CACHE[key]=arr;
 }
-$('btn-menh').addEventListener('click',()=>{
+function genSuggestions(){
+  const err=$('sugg-err'); err.style.display='none';
+  const branch=getBranch();
+  $('sugg-branch').textContent=branch;
+  $('sugg-wrap').style.display='block';
+  SUGG=[]; $('sugg-rows').innerHTML=''; $('sugg-count').textContent='';
+  if(!MENH||!branch) return;
+  const i0=+$('price-from').value, i1=+$('price-to').value;
+  if(i0>i1){ err.textContent='Khoảng phí chưa hợp lệ: mức "từ" phải thấp hơn mức "đến".'; err.style.display='block'; return; }
+  const H=[...new Set(MENH.hop)].map(String);
+  const want=[]; for(let i=i0;i<=i1;i++) want.push(i);
+  const quota=Math.max(30,Math.floor(200/want.length));       // số dòng tối đa cho mỗi bậc phí
+  const rnd=mulberry32(Math.imul(SUGG_SEED,2654435761));
+  const tails=buildTails(H);
+  const buckets={}; want.forEach(i=>buckets[i]=[]);
+  const seen=new Set();
+  const fill=n=>{ let s=''; for(let i=0;i<n;i++) s+=H[Math.floor(rnd()*H.length)]; return s; };
+  const tryAdd=s=>{
+    if(s.length!==9||seen.has(s)) return; seen.add(s);
+    const pats=analyzeNumber(branch,s); if(!pats.length) return;
+    const best=pats[0], f=officialFee(lenOf(best),best.special), ti=tierIdx(f), b=buckets[ti];
+    if(b&&b.length<quota) b.push({full:branch+s,name:best.name,min:f.min,max:f.max,ti});
+  };
+  for(const ti of want){
+    const b=buckets[ti];
+    if(ti===8){   // từ 10 số đẹp trở lên: chỉ có khi 9 số cuối kết hợp được với mã chi nhánh
+      const okH=new RegExp('^['+H.join('')+']{9}$'); let n=0;
+      for(const it of CATALOG[0].gen('auto')){ if(++n>200000||b.length>=quota) break; if(okH.test(it.s)) tryAdd(it.s); }
+      continue;
+    }
+    // đặt dạng đẹp ở giữa dãy thì mất tính chất "cuối" → phí thấp hơn 1 bậc, nên lấy cả đuôi cao hơn 1 bậc
+    const exact=tails.filter(x=>x.base===ti), lower=tails.filter(x=>x.base<=ti+1&&x.t.length<9);
+    for(let a=0;a<1500&&b.length<quota&&exact.length;a++){          // đuôi đúng bậc phí, đặt ở cuối dãy
+      const x=exact[Math.floor(rnd()*exact.length)]; tryAdd(fill(9-x.t.length)+x.t);
+    }
+    for(let a=0;a<4000&&b.length<quota&&lower.length;a++){          // dạng đẹp đặt ở cuối hoặc giữa dãy
+      const x=lower[Math.floor(rnd()*lower.length)], free=9-x.t.length, right=Math.floor(rnd()*(free+1));
+      tryAdd(fill(free-right)+x.t+fill(right));
+    }
+    for(let a=0;a<3000&&b.length<quota;a++) tryAdd(fill(9));        // bậc phí còn thiếu: thử thêm dãy ngẫu nhiên
+  }
+  const empty=[];
+  // trong mỗi bậc phí: xen kẽ các loại số đẹp để đầu danh sách không chỉ toàn một loại
+  const mix=b=>{ const g={}; b.forEach(r=>{ (g[r.name]=g[r.name]||[]).push(r); });
+    const ks=Object.keys(g).sort(), out=[]; for(let i=0;out.length<b.length;i++) for(const k of ks) if(g[k][i]) out.push(g[k][i]); return out; };
+  want.forEach(i=>{ const b=buckets[i]; if(!b.length) empty.push(feeTxt({min:TIERS[i][0],max:TIERS[i][1]})); b.sort((x,y)=>x.full<y.full?-1:1); SUGG.push(...mix(b)); });
+  const rangeTxt='từ '+fmt(TIERS[i0][0])+' đ đến '+(TIERS[i1][1]==null?'Thỏa thuận':fmt(TIERS[i1][1])+' đ');
+  if(!SUGG.length){
+    err.textContent='Không tìm được dãy số đẹp hợp mệnh '+MENH.hanh+' trong khoảng phí '+rangeTxt+' với mã chi nhánh '+branch+'. Hãy chọn khoảng phí khác.';
+    err.style.display='block'; return;
+  }
+  $('sugg-rows').innerHTML=SUGG.map(r=>'<tr data-acc="'+r.full+'" style="cursor:pointer" title="Bấm để tra cứu số này">'+
+    '<td class="mono">'+r.full+'</td><td>'+r.name+'</td><td class="num">'+feeTxt(r)+'</td></tr>').join('');
+  $('sugg-count').textContent='Đang hiển thị '+SUGG.length+' dãy số hợp mệnh '+MENH.hanh+' có khung phí '+rangeTxt
+    +'. Bấm "Gợi ý lô số khác" để đổi sang lô khác (ví dụ khi số đã có người mở).'
+    +(empty.length?' Không có số phù hợp ở mức: '+empty.join('; ')+'.':'');
+}
+/* Bấm một dòng gợi ý → đưa số lên ô tra cứu */
+$('sugg-rows').addEventListener('click',e=>{
+  const tr=e.target.closest?e.target.closest('tr[data-acc]'):null; if(!tr) return;
+  $('acc-input').value=tr.dataset.acc; lookup();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+/* Chạy tư vấn: tính mệnh theo ngày sinh, kết luận cho số đang xét (nếu có), sinh danh sách gợi ý */
+function runMenh(){
   const err=$('menh-err'); err.style.display='none';
-  if(!$('dob-input').value){ err.textContent='Vui lòng chọn ngày tháng năm sinh của khách hàng.'; err.style.display='block'; return; }
-  if($('branch-input').value.replace(/\D/g,'').length!==4){ err.textContent='Mã chi nhánh phải gồm đúng 4 chữ số.'; err.style.display='block'; return; }
+  if(CUR_ACC&&!getBranch()) $('branch-input').value=CUR_ACC.slice(0,4);
+  if(!$('dob-input').value){ err.textContent='Vui lòng chọn ngày tháng năm sinh của khách hàng.'; err.style.display='block'; return false; }
+  if(!getBranch()){ err.textContent='Mã chi nhánh phải gồm đúng 4 chữ số.'; err.style.display='block'; return false; }
   calcMenh();
   genSuggestions();
+  return true;
+}
+$('btn-menh').addEventListener('click',runMenh);
+$('dob-input').addEventListener('keydown',e=>{ if(e.key==='Enter') runMenh(); });
+$('branch-input').addEventListener('keydown',e=>{ if(e.key==='Enter') runMenh(); });
+/* Nút trong phần kết quả tra cứu: "Xem số này có hợp mệnh hay không" */
+$('btn-check-menh').addEventListener('click',()=>{
+  if(!CUR_ACC) return;
+  $('branch-input').value=CUR_ACC.slice(0,4);          // gợi ý cùng mã chi nhánh với số đang xét
+  const card=$('menh-card');
+  if($('dob-input').value&&runMenh()){                 // đã có ngày sinh → xem luôn
+    $('menh-check').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  $('menh-err').style.display='none';
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+  card.classList.add('flash'); setTimeout(()=>card.classList.remove('flash'),1800);
+  try{ $('dob-input').focus({preventScroll:true}); }catch(e){}
 });
+/* Khoảng phí */
+$('price-from').innerHTML=TIERS.map((t,i)=>'<option value="'+i+'">'+fmt(t[0])+' đ</option>').join('');
+$('price-to').innerHTML=TIERS.map((t,i)=>'<option value="'+i+'">'+(t[1]==null?'Thỏa thuận (không giới hạn)':fmt(t[1])+' đ')+'</option>').join('');
+$('price-from').value='0'; $('price-to').value='2';      // mặc định: 300.000 — 3.000.000 đ
+$('price-from').addEventListener('change',()=>{ if(MENH) genSuggestions(); });
+$('price-to').addEventListener('change',()=>{ if(MENH) genSuggestions(); });
+$('btn-sugg-more').addEventListener('click',()=>{ if(!MENH) return; SUGG_SEED++; genSuggestions(); });
 $('btn-sugg-export').addEventListener('click',()=>{
   if(!SUGG.length) return;
   const rows=SUGG.map((r,i)=>[i+1,csvAcc(r.full),'"'+r.name.replace(/"/g,'""')+'"',r.min,r.max==null?'Thỏa thuận':r.max]);
-  const y=MENH?MENH.year:'';
-  downloadCSV('So_dep_hop_menh_'+(MENH?MENH.hanh:'')+'_'+y+'_'+getBranch()+'.csv',
+  downloadCSV('So_dep_hop_menh_'+(MENH?MENH.hanh+'_'+MENH.year:'')+'_'+getBranch()+'.csv',
     ['STT','So tai khoan','Loai so dep (cao nhat)','Phi toi thieu (VND)','Phi toi da (VND)'],rows);
 });
 
